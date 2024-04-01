@@ -50,12 +50,19 @@ class UserController extends Controller
             );
         } catch (\Exception $e) {
             return $e;
-            dump($e);
         }
 
         return response($response, 200)->header('Content-Type', 'application/json');
     }
 
+    /**
+     * Autentica un usuario
+     *
+     * @param Request $request
+     * 
+     * @return [type]
+     * 
+     */
     public function authenticateUser(Request $request)
     {
         try {
@@ -115,6 +122,6 @@ class UserController extends Controller
             return $e;
         }
 
-        return response($response, 200)->header('Content-Type', 'application/json');
+        return response([$response], 200)->header('Content-Type', 'application/json');
     }
 }
