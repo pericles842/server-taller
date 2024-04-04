@@ -59,16 +59,16 @@ class UserImplement
     public function getUser($connection, $username)
     {
         return  $connection->selectOne("SELECT user.id,
-                                        user.fulL_name,
-                                        user.email,
-                                        user.ci,
-                                        user.direction,
-                                        user.username,
-                                        roles.name 
-                                    FROM usuarios user 
-                                    iNNER JOIN roles 
-                                        ON roles.id = user.rol_id 
-                                    WHERE user.username = :username", ["username" => $username]);
+                    user.fulL_name  name_user,
+                    user.email,
+                    user.ci,
+                    user.direction,
+                    user.username,
+                    roles.name name_rol 
+                FROM usuarios user 
+                iNNER JOIN roles 
+                    ON roles.id = user.rol_id 
+                WHERE user.username = :username", ["username" => $username]);
     }
 
     /**
@@ -85,7 +85,7 @@ class UserImplement
 
         if (Auth::attempt($credentials)) {
 
-            $user  = (object) self::getUser($connection,$credentials['username']);
+            $user  = (object) self::getUser($connection, $credentials['username']);
             $user->token = Str::random(60);
 
             return  $user;
