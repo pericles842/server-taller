@@ -31,7 +31,7 @@ class UserController extends Controller
     public function createUser(Request $request)
     {
         try {
-            if (!$request->filled('fulL_name')) throw new \Exception("Nombre es requerido", 400);
+            if (!$request->filled('name_user')) throw new \Exception("Nombre es requerido", 400);
             if (!$request->filled('email')) throw new \Exception("Email es requerido", 400);
             if (!$request->filled('username')) throw new \Exception("Username es requerido", 400);
             if (!$request->filled('password')) throw new \Exception("Password es requerido", 400);
@@ -40,7 +40,7 @@ class UserController extends Controller
 
             $response =  $this->userImplement->createUser(
                 DB::connection(),
-                $request->fulL_name,
+                $request->name_user,
                 $request->email,
                 $request->ci,
                 $request->direction,
@@ -66,25 +66,25 @@ class UserController extends Controller
     public function authenticateUser(Request $request)
     {
         try {
-
-
-            if (!$request->filled('username')) throw new \Exception("Username es requerido", 400);
-            if (!$request->filled('password')) throw new \Exception("Password es requerido", 400);
-
+            if (!$request->filled('username')) {
+                throw new \Exception("Username es requerido", 400);
+            }
+            
+            if (!$request->filled('password')) {
+                throw new \Exception("Password es requerido", 400);
+            }
+    
             $response =  $this->userImplement->authenticateUser(
                 DB::connection(),
                 $request->only('username', 'password')
             );
-
-            if (!empty($response->token)) {
-
-                $cookie = cookie('token_user', $response->token); // 60 minutos de vida de la cookie
-            }
+    
+            
+    
         } catch (\Exception $e) {
             return $e;
         }
-
-        return response([$response], 200)->header('Content-Type', 'application/json')->cookie($cookie);
+        return response([$response], 200)->header('Content-Type', 'application/json');
     }
 
     /**
@@ -98,7 +98,7 @@ class UserController extends Controller
     public function logoutUser()
     {
         // Eliminar la cookie 'token_user'
-        $cookie = cookie()->forget('token_user');
+        $cookie = cookie()->forget('user_info');
 
         return response()->json(['message' => 'Sesión Cerrada exitosamente'], 200)->cookie($cookie);
     }

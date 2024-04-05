@@ -13,10 +13,13 @@ class TokenAuthenticationMiddleware
     {
 
         // Verificar si el token de usuario está presente en la sesión
-        if (!$request->hasCookie('token_user')) {
+        if (!$request->hasCookie('user_info')) {
             return response()->json(['error' => 'Usuario no autenticado'], 401);
         }
 
+        
+        
         return $next($request);
     }
+ 
 }

@@ -64,6 +64,8 @@ class UserImplement
                     user.ci,
                     user.direction,
                     user.username,
+                    user.rol_id rol,
+                    user.password token,
                     roles.name name_rol 
                 FROM usuarios user 
                 iNNER JOIN roles 
@@ -86,11 +88,10 @@ class UserImplement
         if (Auth::attempt($credentials)) {
 
             $user  = (object) self::getUser($connection, $credentials['username']);
-            $user->token = Str::random(60);
 
             return  $user;
         } else {
-            return response()->json(['error' => 'Credenciales inválidas'], 401);
+            throw new \Exception('Credenciales inválidas', 401);
         }
     }
 }

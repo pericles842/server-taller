@@ -19,6 +19,10 @@ Route::post('user/logout', [\App\Http\Controllers\UserController::class, 'logout
 
 
 Route::middleware('authentication')->group(function () {
-    Route::post('user/create', [\App\Http\Controllers\UserController::class, 'createUser']);
-    Route::get('user/search/{where}', [\App\Http\Controllers\UserController::class, 'getUser']);
+    
 });
+ //usuerios
+ Route::post('user/create', [\App\Http\Controllers\UserController::class, 'createUser']);
+ Route::get('user/search/{where}', [\App\Http\Controllers\UserController::class, 'getUser']);
+
+ Route::post('status/listStatus', [\App\Http\Controllers\StatusController::class, 'listStatus']);
