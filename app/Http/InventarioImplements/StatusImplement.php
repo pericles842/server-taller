@@ -15,7 +15,7 @@ class StatusImplement
      * @return [type]
      * 
      */
-    public function listStatus($connection, $rol)
+    public function listRoles($connection, $rol)
     {
 
         $select = "SELECT id , name FROM `roles` ";

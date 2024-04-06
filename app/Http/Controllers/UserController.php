@@ -35,7 +35,7 @@ class UserController extends Controller
             if (!$request->filled('email')) throw new \Exception("Email es requerido", 400);
             if (!$request->filled('username')) throw new \Exception("Username es requerido", 400);
             if (!$request->filled('password')) throw new \Exception("Password es requerido", 400);
-            if (!$request->filled('rol_id')) throw new \Exception("Rol es requerido", 400);
+            if (!$request->filled('rol')) throw new \Exception("Rol es requerido", 400);
 
 
             $response =  $this->userImplement->createUser(
@@ -46,7 +46,7 @@ class UserController extends Controller
                 $request->direction,
                 $request->username,
                 $request->password,
-                $request->rol_id
+                $request->rol
             );
         } catch (\Exception $e) {
             return $e;
@@ -69,18 +69,15 @@ class UserController extends Controller
             if (!$request->filled('username')) {
                 throw new \Exception("Username es requerido", 400);
             }
-            
+
             if (!$request->filled('password')) {
                 throw new \Exception("Password es requerido", 400);
             }
-    
+
             $response =  $this->userImplement->authenticateUser(
                 DB::connection(),
                 $request->only('username', 'password')
             );
-    
-            
-    
         } catch (\Exception $e) {
             return $e;
         }
@@ -123,5 +120,28 @@ class UserController extends Controller
         }
 
         return response([$response], 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Lista los usuarios   
+     *
+     * @param Request $request
+     * 
+     * @return array
+     * 
+     */
+    public function listUsers(Request $request)
+    {
+        try {
+            if (!$request->header('rol')) throw new \Exception("El encabezado 'rol' es requerido", 400);
+
+            $data =  $this->userImplement->listUsers(
+                DB::connection(),
+                $request->header('rol')
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
     }
 }

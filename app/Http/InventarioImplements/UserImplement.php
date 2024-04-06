@@ -94,4 +94,28 @@ class UserImplement
             throw new \Exception('Credenciales inválidas', 401);
         }
     }
+
+    /**
+     * Lista los usuarios menos el actual
+     *
+     * @param mixed $connection 
+     * @param mixed $rol
+     * 
+     * @return array
+     * 
+     */
+    public function listUsers($connection, $rol)
+    {
+        return $connection->select("SELECT 
+            user.id ,
+            user.fulL_name name_user,
+            user.email,
+            roles.name name_rol
+        FROM usuarios user
+        INNER JOIN roles ON
+             roles.id = user.rol_id
+        WHERE user.id != :rol;", [
+            "rol" => $rol
+        ]);
+    }
 }

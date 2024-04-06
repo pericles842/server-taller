@@ -26,15 +26,14 @@ class StatusController extends Controller
      * @return [type]
      * 
      */
-    public function listStatus(Request $request)
+    public function listRoles(Request $request)
     {
         try {
+            if (!$request->header('rol')) throw new \Exception("El encabezado 'rol' es requerido", 400);
 
-            if (!$request->filled('rol')) throw new \Exception("Roles requerido", 400);
-
-            $response = $this->statusImplement->listStatus(
+            $response = $this->statusImplement->listRoles(
                 DB::connection(),
-                $request->rol
+                $request->header('rol')
             );
         } catch (\Exception $e) {
             return $e;
