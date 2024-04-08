@@ -133,11 +133,11 @@ class UserController extends Controller
     public function listUsers(Request $request)
     {
         try {
-            if (!$request->header('rol')) throw new \Exception("El encabezado 'rol' es requerido", 400);
+            if (!$request->header('user')) throw new \Exception("El encabezado 'user' es requerido", 400);
 
             $data =  $this->userImplement->listUsers(
                 DB::connection(),
-                $request->header('rol')
+                $request->header('user')
             );
         } catch (\Exception $e) {
             return $e;

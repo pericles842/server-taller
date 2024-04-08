@@ -3,7 +3,7 @@
 namespace App\Http\InventarioImplements;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 
 class UserImplement
@@ -39,7 +39,7 @@ class UserImplement
             "ci" => $ci,
             "direction" => $direction,
             "username" => $username,
-            "password" => trim(bcrypt($password)),
+            "password" => trim(Crypt::encryptString($password)),
             "rol_id" => $rol_id
         ];
         $data['id'] = $connection->table('usuarios')->insertGetId($data);
@@ -47,6 +47,9 @@ class UserImplement
         return $data;
     }
 
+    function updateUser()
+    {
+    }
     /**
      *Busca un usuario por user     
      *
@@ -85,7 +88,13 @@ class UserImplement
     public function authenticateUser($connection, $credentials)
     {
 
-        if (Auth::attempt($credentials)) {
+
+        $password_encrypt_db = $connection->table('usuarios')->where('username', $credentials['username'])->value('password');
+
+        $password_encrypt_db = Crypt::decryptString($password_encrypt_db);
+
+
+        if ($password_encrypt_db == trim($credentials['password'])) {
 
             $user  = (object) self::getUser($connection, $credentials['username']);
 
@@ -96,7 +105,7 @@ class UserImplement
     }
 
     /**
-     * Lista los usuarios menos el actual
+     * Lista los usuarios menos el actual METODO PLIGROSO
      *
      * @param mixed $connection 
      * @param mixed $rol
@@ -104,18 +113,30 @@ class UserImplement
      * @return array
      * 
      */
-    public function listUsers($connection, $rol)
+    public function listUsers($connection, $user)
     {
-        return $connection->select("SELECT 
+        $users = $connection->select("SELECT 
             user.id ,
             user.fulL_name name_user,
             user.email,
-            roles.name name_rol
+            roles.name name_rol,
+            user.direction,
+            user.username,
+            user.rol_id rol,
+            user.password,
+            user.ci
         FROM usuarios user
         INNER JOIN roles ON
              roles.id = user.rol_id
-        WHERE user.id != :rol;", [
-            "rol" => $rol
+        WHERE user.id != :user;", [
+            "user" => $user
         ]);
+
+        foreach ($users  as $key => $user) {
+             
+            $users[$key]->password = Crypt::decryptString($user->password);
+        }
+
+        return $users;
     }
 }
