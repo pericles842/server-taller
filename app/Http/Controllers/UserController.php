@@ -38,8 +38,9 @@ class UserController extends Controller
             if (!$request->filled('rol')) throw new \Exception("Rol es requerido", 400);
 
 
-            $response =  $this->userImplement->createUser(
+            $response =  $this->userImplement->dynamicCreateUsers(
                 DB::connection(),
+                $request->id,
                 $request->name_user,
                 $request->email,
                 $request->ci,
@@ -82,6 +83,30 @@ class UserController extends Controller
             return $e;
         }
         return response([$response], 200)->header('Content-Type', 'application/json');
+    }
+    /**
+     *Eliminar un usuario
+     *
+     * @param mixed $id
+     * 
+     * @return integer
+     * 
+     */
+    public function deleteUser($id)
+    {
+        try {
+            if (!filled($id)) {
+                throw new \Exception("id es requerido", 400);
+            }
+
+            $data =  $this->userImplement->deleteUser(
+                DB::connection(),
+                $id
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
     }
 
     /**

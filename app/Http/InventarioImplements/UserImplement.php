@@ -47,8 +47,120 @@ class UserImplement
         return $data;
     }
 
-    function updateUser()
+    /**
+     *Actualiza un registro de usuario
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * @param mixed $fulL_name
+     * @param mixed $email
+     * @param mixed $ci
+     * @param mixed $direction
+     * @param mixed $username
+     * @param mixed $password
+     * @param mixed $rol_id
+     * 
+     * @return array
+     * 
+     */
+    function updateUser(
+        $connection,
+        $id,
+        $fulL_name,
+        $email,
+        $ci,
+        $direction,
+        $username,
+        $password,
+        $rol_id
+    ) {
+
+        $data = [
+            "fulL_name" => $fulL_name,
+            "email" => $email,
+            "ci" => $ci,
+            "direction" => $direction,
+            "username" => $username,
+            "password" => trim(Crypt::encryptString($password)),
+            "rol_id" => $rol_id
+        ];
+
+        $connection->table('usuarios')->where('id', $id)->update($data);
+
+        return $data;
+    }
+
+    /**
+     * elimina un usuario   
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * 
+     * @return array
+     * 
+     */
+    function deleteUser($connection, $id)
     {
+        return  $connection->table('usuarios')->where('id', $id)->delete();
+    }
+
+    /**
+     * Crea y actualiza dinamicamente 
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * @param mixed $fulL_name
+     * @param mixed $email
+     * @param mixed $ci
+     * @param mixed $direction
+     * @param mixed $username
+     * @param mixed $password
+     * @param mixed $rol_id
+     * 
+     * @return [type]
+     * 
+     */
+    function dynamicCreateUsers(
+        $connection,
+        $id,
+        $fulL_name,
+        $email,
+        $ci,
+        $direction,
+        $username,
+        $password,
+        $rol_id
+    ) {
+
+        $data = [];
+        if (empty($id)) {
+            dump('asdasd');
+            $data =  self::createUser(
+                $connection,
+                $fulL_name,
+                $email,
+                $ci,
+                $direction,
+                $username,
+                $password,
+                $rol_id
+            );
+        } else {
+
+            $data = self::updateUser(
+                $connection,
+                $id,
+                $fulL_name,
+                $email,
+                $ci,
+                $direction,
+                $username,
+                $password,
+                $rol_id
+            );
+        }
+
+        return $data;
     }
     /**
      *Busca un usuario por user     
@@ -133,7 +245,7 @@ class UserImplement
         ]);
 
         foreach ($users  as $key => $user) {
-             
+
             $users[$key]->password = Crypt::decryptString($user->password);
         }
 
