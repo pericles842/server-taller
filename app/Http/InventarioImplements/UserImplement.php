@@ -2,7 +2,6 @@
 
 namespace App\Http\InventarioImplements;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
 
@@ -129,12 +128,13 @@ class UserImplement
         $direction,
         $username,
         $password,
-        $rol_id
+        $rol_id,
+        $archivado
     ) {
 
         $data = [];
-        if (empty($id)) {
-            dump('asdasd');
+        if (empty($id) or $id == -1) {
+
             $data =  self::createUser(
                 $connection,
                 $fulL_name,
@@ -146,7 +146,6 @@ class UserImplement
                 $rol_id
             );
         } else {
-
             $data = self::updateUser(
                 $connection,
                 $id,
@@ -159,7 +158,7 @@ class UserImplement
                 $rol_id
             );
         }
-
+        $data['archivado'] = $archivado;
         return $data;
     }
     /**
@@ -188,6 +187,20 @@ class UserImplement
                 WHERE user.username = :username", ["username" => $username]);
     }
 
+    /**
+     *Archiva un usuario    
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * 
+     * @return mixed
+     * 
+     */
+    public function archiveUser($connection, $id)
+    {
+
+        $connection->table('usuarios')->where('id', $id)->update(["archivado" => 1]);
+    }
     /**
      *Autenticar usuario
      *
@@ -236,7 +249,9 @@ class UserImplement
             user.username,
             user.rol_id rol,
             user.password,
-            user.ci
+            user.ci,
+            IF( user.archivado = 1,
+            'Archivado', 'No Archivado') archivado
         FROM usuarios user
         INNER JOIN roles ON
              roles.id = user.rol_id

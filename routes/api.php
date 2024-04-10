@@ -27,6 +27,7 @@ Route::post('user/logout', [\App\Http\Controllers\UserController::class, 'logout
  Route::get('user/search/{where}', [\App\Http\Controllers\UserController::class, 'getUser']);
  Route::get('user/list-users', [\App\Http\Controllers\UserController::class, 'listUsers']);
  Route::delete('user/delete/{id}', [\App\Http\Controllers\UserController::class, 'deleteUser']);
+ Route::get('user/archive/{id}', [\App\Http\Controllers\UserController::class, 'archiveUser']);
 
 
  /*ROLES DE USUARIOS */

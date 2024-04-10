@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 class InventarioDataV1 extends Migration
 {
@@ -62,6 +61,17 @@ class InventarioDataV1 extends Migration
                 "delete_notes" => 0,
             ],
         ]);
+
+        DB::table('usuarios')->insert([
+            "fulL_name" => 'Louis Sarmiento',
+            "email" => 'slouis482@gmail.com',
+            "ci" => '30329927',
+            "direction" => 'Candelaria',
+            "username" => '30329927',
+            "password" => trim(Crypt::encryptString('admin')),
+            "archivado" => '0',
+            "rol_id" => '1'
+        ]);
     }
 
     /**
@@ -71,6 +81,7 @@ class InventarioDataV1 extends Migration
      */
     public function down()
     {
+        DB::table('usuarios')->truncate();
         DB::table('roles')->truncate();
     }
 }

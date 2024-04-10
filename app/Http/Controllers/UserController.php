@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\InventarioImplements\UserImplement;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Response;
-
 
 
 class UserController extends Controller
@@ -47,7 +44,8 @@ class UserController extends Controller
                 $request->direction,
                 $request->username,
                 $request->password,
-                $request->rol
+                $request->rol,
+                $request->archivado,
             );
         } catch (\Exception $e) {
             return $e;
@@ -108,6 +106,32 @@ class UserController extends Controller
         }
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+
+    /**
+     * archiva un usuario
+     *
+     * @param mixed $id
+     * 
+     * @return [type]
+     * 
+     */
+    public function archiveUser($id)
+    {
+        try {
+            if (!filled($id)) {
+                throw new \Exception("id es requerido", 400);
+            }
+
+            $data =  $this->userImplement->archiveUser(
+                DB::connection(),
+                $id
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
 
     /**
      * Logaut de la sesion

@@ -51,6 +51,7 @@ class InventarioV1 extends Migration
             $table->string('direction', 500)->nullable(true)->comment('direccion de la persona');
             $table->string('username', 300)->unique()->nullable(false)->comment('usuario del login');
             $table->string('password', 300)->unique()->nullable(false)->comment('contraseña login');
+            $table->integer('archivado')->default(0)->nullable(false)->comment('usuario archivado');
 
             $table->foreignId('rol_id')->nullable(false)->comment('ID del rol del usuario')
             ->references('id')->on('roles')
