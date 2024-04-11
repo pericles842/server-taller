@@ -95,4 +95,38 @@ class SucursalesImplement
 
         return $data;
     }
+    
+    /**
+     * Elimina un almacen 
+     *
+     * @param mixed $connection
+     * @param integer $id_store
+     * 
+     * @return integer
+     * 
+     */
+    function deleteStore($connection, $id_store)
+    {
+       $connection->table('almacenes')->where('id', $id_store)->delete();
+
+        return $data;
+    }
+
+    /**
+     * Elimina un usuario de un alamcen
+     *
+     * @param mixed $connection
+     * @param integer $id_store
+     * @param integer $id_user
+     * 
+     * @return integer
+     * 
+     */
+     function removeUserFromStore($connection, $id_store, $id_user)
+    {
+       $connection->table('almacenes')->where('user_id', $id_user)->where('almacen_id', $id_store)->delete();
+
+        return $data;
+    }
+
 }
