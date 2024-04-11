@@ -28,7 +28,8 @@ class InventarioV1 extends Migration
         END
         ');
 
-         //TABLA ROLES
+         //*TABLA ROLES
+
          Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300)->nullable(false)->comment('Nombre del rol');
@@ -42,7 +43,7 @@ class InventarioV1 extends Migration
         DB::statement("CALL create_timestamps('roles')");
 
 
-        //TABLA USUARIOS
+        //*TABLA USUARIOS
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
             $table->string('fulL_name', 300)->nullable(false)->comment('nombre del usuarios');
@@ -61,40 +62,40 @@ class InventarioV1 extends Migration
         DB::statement("CALL create_timestamps('usuarios')");
 
 
-        //TABLA ESTATUS
-        Schema::create('esatus', function (Blueprint $table) {
+        //*TABLA ESTATUS
+        Schema::create('status', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300)->nullable(false)->comment('Nombre del estatus ');
         });
-        DB::statement("CALL create_timestamps('esatus')");
+        DB::statement("CALL create_timestamps('status')");
         
-        //TABLA ALMACENES
+        //*TABLA ALMACENES
         Schema::create('almacenes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300)->nullable(false)->comment('Nombre del tiendas ');
             $table->string('direction', 500)->nullable(false)->comment('Direccion del alamacen ');
             $table->foreignId('status_id')->nullable(false)->comment('id del estatus')
-            ->references('id')->on('esatus')
+            ->references('id')->on('status')
             ->onDelete('restrict')
             ->onUpdate('cascade');
         });
         DB::statement("CALL create_timestamps('almacenes')");
 
-        //TABLA TIENDAS
+        //*TABLA TIENDAS
         Schema::create('tiendas', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300)->nullable(false)->comment('Nombre del tiendas ');
             $table->string('direction', 500)->nullable(false)->comment('Direccion del tiendas ');
             $table->foreignId('status_id')->nullable(false)->comment('id del estatus')
-            ->references('id')->on('esatus')
+            ->references('id')->on('status')
             ->onDelete('restrict')
             ->onUpdate('cascade');
         });
         DB::statement("CALL create_timestamps('tiendas')");
 
-        //TABLA RELACION USUARIOS ALMACENES
+        //*TABLA RELACION USUARIOS ALMACENES
         Schema::create('usuario_almacen', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable(false)->comment('id del usuario')
+            $table->foreignId('user_id')->unique()->nullable(false)->comment('id del usuario')
             ->references('id')->on('usuarios')->onDelete('cascade')->onUpdate('cascade');
             
             $table->foreignId('almacen_id')->nullable(false)->comment('id del alamcen')
@@ -102,15 +103,15 @@ class InventarioV1 extends Migration
         });
         DB::statement("CALL create_timestamps('usuario_almacen')");
 
-        //TABLA RELACION USUARIOS TIENDAS
+        //*TABLA RELACION USUARIOS TIENDAS
         Schema::create('usuario_tienda', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable(false)->comment('id del usuario')
+            $table->foreignId('user_id')->unique()->nullable(false)->comment('id del usuario')
             ->references('id')->on('usuarios')->onDelete('cascade')->onUpdate('cascade');
             
             $table->foreignId('tienda_id')->nullable(false)->comment('id de la tienda')
             ->references('id')->on('tiendas')->onDelete('cascade')->onUpdate('cascade');
         });
-        DB::statement("CALL create_timestamps('tiendas')");
+        DB::statement("CALL create_timestamps('usuario_tienda')");
     }
 
     /**
@@ -123,5 +124,10 @@ class InventarioV1 extends Migration
         DB::unprepared('DROP PROCEDURE IF EXISTS create_timestamps');
         Schema::dropIfExists('usuarios');
         Schema::dropIfExists('roles');
+        Schema::dropIfExists('usuario_tienda');
+        Schema::dropIfExists('usuario_almacen');
+        Schema::dropIfExists('almacenes');
+        Schema::dropIfExists('tiendas');
+        Schema::dropIfExists('status');
     }
 }
