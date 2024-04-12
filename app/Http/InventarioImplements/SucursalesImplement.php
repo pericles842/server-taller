@@ -65,10 +65,10 @@ class SucursalesImplement
      */
     function createDynamicStore($connection, $store)
     {
-        if (empty($store['id']) OR $store['id'] == -1) {
-            $store = self::createStore($connection, strtoupper($store['name']), $store['direction'], $store['status_id']);
+        if (empty($store['id']) or $store['id'] == -1) {
+            $store = self::createStore($connection, strtoupper($store['name_store']), $store['direction'], $store['status_id']);
         } else {
-            $store = self::updateStore($connection, $store['id'], strtoupper($store['name']), $store['direction'], $store['status_id']);
+            $store = self::updateStore($connection, $store['id'], strtoupper($store['name_store']), $store['direction'], $store['status_id']);
         }
 
         return $store;
@@ -95,7 +95,7 @@ class SucursalesImplement
 
         return $data;
     }
-    
+
     /**
      * Elimina un almacen 
      *
@@ -107,9 +107,7 @@ class SucursalesImplement
      */
     function deleteStore($connection, $id_store)
     {
-       $connection->table('almacenes')->where('id', $id_store)->delete();
-
-        return $data;
+        return $connection->table('almacenes')->where('id', $id_store)->delete();
     }
 
     /**
@@ -122,11 +120,8 @@ class SucursalesImplement
      * @return integer
      * 
      */
-     function removeUserFromStore($connection, $id_store, $id_user)
+    function removeUserFromStore($connection, $id_store, $id_user)
     {
-       $connection->table('almacenes')->where('user_id', $id_user)->where('almacen_id', $id_store)->delete();
-
-        return $data;
+        return  $connection->table('almacenes')->where('user_id', $id_user)->where('almacen_id', $id_store)->delete();
     }
-
 }
