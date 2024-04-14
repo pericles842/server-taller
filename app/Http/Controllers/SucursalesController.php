@@ -30,12 +30,11 @@ class SucursalesController extends Controller
     {
         try {
             if (!$request->filled('name_store')) throw new \Exception("name_store es requerido", 400);
-            if (!$request->filled('status_id')) throw new \Exception("status_id es requerido", 400);
             if (!$request->filled('direction')) throw new \Exception("direction es requerido", 400);
 
             $data = $this->sucursalesImplement->createDynamicStore(
                 DB::connection(),
-                $request->only('id', 'name_store', 'direction', 'status_id')
+                $request->only('id', 'name_store', 'direction')
             );
         } catch (\Exception $e) {
             return $e;
@@ -43,7 +42,7 @@ class SucursalesController extends Controller
 
         return response($data, 200)->header('Content-Type', 'application/json');
     }
-        
+
     /**
      * Asigna un usuario a un almacen
      *
@@ -63,6 +62,72 @@ class SucursalesController extends Controller
                 DB::connection(),
                 $request->almacen_id,
                 $request->user_id
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Lista todos los almacenes
+     *
+     * @return [type]
+     * 
+     */
+    public function listStore()
+    {
+        try {
+
+            $data = $this->sucursalesImplement->listStore(
+                DB::connection()
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Eliminar un alamacen
+     *
+     * @param mixed $store_id
+     * 
+     * @return [type]
+     * 
+     */
+    public function deleteStore($store_id)
+    {
+        try {
+
+            $data = $this->sucursalesImplement->deleteStore(
+                DB::connection(),
+                $store_id
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     *Cierra un almacen
+     *
+     * @param mixed $store_id
+     * 
+     * @return [type]
+     * 
+     */
+    public function closeStore($store_id)
+    {
+        try {
+
+            $data = $this->sucursalesImplement->closeStore(
+                DB::connection(),
+                $store_id
             );
         } catch (\Exception $e) {
             return $e;

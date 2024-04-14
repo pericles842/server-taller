@@ -32,5 +32,10 @@ Route::get('user/archive/{id}', [\App\Http\Controllers\UserController::class, 'a
 /*ALMACENES */
 Route::post('store/create', [\App\Http\Controllers\SucursalesController::class, 'createDynamicStore']);
 Route::post('store/assign-users', [\App\Http\Controllers\SucursalesController::class, 'assignUserToStore']);
+Route::get('store/list-store', [\App\Http\Controllers\SucursalesController::class, 'listStore']);
+Route::delete('store/delete/{id}', [\App\Http\Controllers\SucursalesController::class, 'deleteStore']);
+Route::get('store/archive/{id}', [\App\Http\Controllers\UserController::class, 'closeStore']);
+
+
 /*ROLES DE USUARIOS */
 Route::get('status/list-roles', [\App\Http\Controllers\StatusController::class, 'listRoles']);

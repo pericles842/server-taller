@@ -72,6 +72,15 @@ class InventarioDataV1 extends Migration
             "archivado" => '0',
             "rol_id" => '1'
         ]);
+
+        DB::table('status')->insert(
+            [
+                "name" => 'Abierto'
+            ],
+            [
+                "name" => 'Cerrado'
+            ]
+        );
     }
 
     /**
@@ -81,7 +90,8 @@ class InventarioDataV1 extends Migration
      */
     public function down()
     {
-        DB::table('usuarios')->truncate();
         DB::table('roles')->truncate();
+        DB::table('usuarios')->truncate();
+        DB::table('status')->truncate();
     }
 }

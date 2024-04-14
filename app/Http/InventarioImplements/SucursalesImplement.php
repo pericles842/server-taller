@@ -66,12 +66,26 @@ class SucursalesImplement
     function createDynamicStore($connection, $store)
     {
         if (empty($store['id']) or $store['id'] == -1) {
-            $store = self::createStore($connection, strtoupper($store['name_store']), $store['direction'], $store['status_id']);
+            $store = self::createStore($connection, strtoupper($store['name_store']), $store['direction'], 1);
         } else {
-            $store = self::updateStore($connection, $store['id'], strtoupper($store['name_store']), $store['direction'], $store['status_id']);
+            $store = self::updateStore($connection, $store['id'], strtoupper($store['name_store']), $store['direction'], 1);
         }
 
         return $store;
+    }
+
+    /**
+     * Listar usuarios
+     *
+     * @param mixed $connection
+     * 
+     * @return array
+     * 
+     */
+    function listStore($connection)
+    {
+        return $connection->select("SELECT almacenes.id, almacenes.name name_store, almacenes.direction , st.name estatus FROM almacenes 
+        INNER JOIN status st ON st.id = almacenes.status_id");
     }
 
     /**
@@ -123,5 +137,20 @@ class SucursalesImplement
     function removeUserFromStore($connection, $id_store, $id_user)
     {
         return  $connection->table('almacenes')->where('user_id', $id_user)->where('almacen_id', $id_store)->delete();
+    }
+
+
+    /**
+     * Cierra un almacen
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * 
+     * @return mixed
+     * 
+     */
+    function closeStore($connection, $id)
+    {
+        $connection->table('almacenes')->where('id', $id)->update(["status_id" => 2]);
     }
 }
