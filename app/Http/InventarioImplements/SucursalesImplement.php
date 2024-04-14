@@ -50,7 +50,7 @@ class SucursalesImplement
         ];
 
         $connection->table('almacenes')->where('id', $id)->update($data);
-
+        $data['id'] = $id;
         return $data;
     }
 
@@ -84,7 +84,7 @@ class SucursalesImplement
      */
     function listStore($connection)
     {
-        return $connection->select("SELECT almacenes.id, almacenes.name name_store, almacenes.direction , st.name estatus FROM almacenes 
+        return $connection->select("SELECT almacenes.id, almacenes.name name_store, almacenes.direction ,almacenes.status_id, st.name estatus FROM almacenes 
         INNER JOIN status st ON st.id = almacenes.status_id");
     }
 
@@ -152,5 +152,119 @@ class SucursalesImplement
     function closeStore($connection, $id)
     {
         $connection->table('almacenes')->where('id', $id)->update(["status_id" => 2]);
+    }
+
+    /**
+     * Crear tienda 
+     *
+     * @param mixed $connection
+     * @param mixed $name
+     * @param mixed $direction
+     * @param mixed $status_id
+     * 
+     * @return array
+     * 
+     */
+    function createShop($connection, $name, $direction, $status_id)
+    {
+
+        $data = [
+            "name" => $name,
+            "direction" => $direction,
+            "status_id" => $status_id
+        ];
+
+        $data['id'] = $connection->table('tiendas')->insertGetId($data);
+
+        return $data;
+    }
+
+    /**
+     * Actualizar una tienda        
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * @param mixed $name
+     * @param mixed $direction
+     * @param mixed $status_id
+     * 
+     * @return array
+     * 
+     */
+    function updateShop($connection, $id, $name, $direction, $status_id)
+    {
+        $data = [
+            "name" => $name,
+            "direction" => $direction,
+            "status_id" => $status_id
+        ];
+
+        $connection->table('tiendas')->where('id', $id)->update($data);
+
+        $data['id'] = $id;
+
+        return $data;
+    }
+
+    /**
+     *  Crea y actualiza una tienda dinamicamente
+     *
+     * @param mixed $connection
+     * @param mixed $store
+     * 
+     * @return array
+     * 
+     */
+    function createDynamicShop($connection, $shop)
+    {
+        if (empty($shop['id']) or $shop['id'] == -1) {
+            $shop = self::createShop($connection, strtoupper($shop['name_shop']), $shop['direction'], 1);
+        } else {
+            $shop = self::updateShop($connection, $shop['id'], strtoupper($shop['name_shop']), $shop['direction'], 1);
+        }
+
+        return $shop;
+    }
+
+    /**
+     * Lista las tiendas
+     *
+     * @param mixed $connection
+     * 
+     * @return [type]
+     * 
+     */
+    function listShops($connection)
+    {
+        return $connection->select("SELECT tiendas.id, tiendas.name name_shop, tiendas.direction ,tiendas.status_id, st.name estatus FROM tiendas 
+        INNER JOIN status st ON st.id = tiendas.status_id");
+    }
+
+    /**
+     *Elimina una tienda
+     *
+     * @param mixed $connection
+     * @param mixed $id_shop
+     * 
+     * @return [type]
+     * 
+     */
+    function deleteShop($connection, $id_shop)
+    {
+        return $connection->table('tiendas')->where('id', $id_shop)->delete();
+    }
+
+    /**
+     * Cierra una tienda
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * 
+     * @return mixed
+     * 
+     */
+    function closeShop($connection, $id)
+    {
+        $connection->table('tiendas')->where('id', $id)->update(["status_id" => 2]);
     }
 }

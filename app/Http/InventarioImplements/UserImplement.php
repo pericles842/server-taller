@@ -85,7 +85,8 @@ class UserImplement
         ];
 
         $connection->table('usuarios')->where('id', $id)->update($data);
-
+        
+        $data['id'] = $id;
         return $data;
     }
 

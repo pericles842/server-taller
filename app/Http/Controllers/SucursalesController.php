@@ -135,4 +135,96 @@ class SucursalesController extends Controller
 
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+
+    /**
+     * crea y actualiza una tienda dinamicamente
+     *
+     * @param Request $request
+     * 
+     * @return [type]
+     * 
+     */
+    public function createDynamicShop(Request $request)
+    {
+        try {
+            if (!$request->filled('name_shop')) throw new \Exception("name_shop es requerido", 400);
+            if (!$request->filled('direction')) throw new \Exception("direction es requerido", 400);
+
+            $data = $this->sucursalesImplement->createDynamicShop(
+                DB::connection(),
+                $request->only('id', 'name_shop', 'direction')
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     *Cerrar una tienda
+     *
+     * @param mixed $shop_id
+     * 
+     * @return array
+     * 
+     */
+    public function deleteShop($shop_id)
+    {
+        try {
+
+            $data = $this->sucursalesImplement->deleteShop(
+                DB::connection(),
+                $shop_id
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Listar tiendas
+     *
+     * @return array
+     * 
+     */
+    public function listShops()
+    {
+        try {
+
+            $data = $this->sucursalesImplement->listShops(
+                DB::connection()
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+    
+    /**
+     * Cierra una tienda
+     *
+     * @param mixed $shop_id
+     * 
+     * @return [type]
+     * 
+     */
+    public function closeShop($shop_id)
+    {
+        try {
+
+            $data = $this->sucursalesImplement->closeShop(
+                DB::connection(),
+                $shop_id
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+     
 }
