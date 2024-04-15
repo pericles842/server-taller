@@ -203,7 +203,7 @@ class SucursalesController extends Controller
 
         return response($data, 200)->header('Content-Type', 'application/json');
     }
-    
+
     /**
      * Cierra una tienda
      *
@@ -226,5 +226,27 @@ class SucursalesController extends Controller
 
         return response($data, 200)->header('Content-Type', 'application/json');
     }
-     
+
+    /**
+     * Lista los usuarios que no estan asignado a ninguna sucursal
+     *
+     * @param Request $request
+     * 
+     * @return [type]
+     * 
+     */
+    public function listUserNotBranch(Request $request)
+    {
+        try {
+
+
+            $data = $this->sucursalesImplement->listUserNotBranch(
+                DB::connection(),
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
 }

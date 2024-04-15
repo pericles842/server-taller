@@ -43,6 +43,9 @@ Route::get('shop/list-shop', [\App\Http\Controllers\SucursalesController::class,
 Route::delete('shop/delete/{id}', [\App\Http\Controllers\SucursalesController::class, 'deleteShop']);
 Route::get('shop/archive/{id}', [\App\Http\Controllers\SucursalesController::class, 'closeShop']);
 
+Route::get('branch/list-uses', [\App\Http\Controllers\SucursalesController::class, 'listUserNotBranch']);
+ 
+
 
 /*ROLES DE USUARIOS */
 Route::get('status/list-roles', [\App\Http\Controllers\StatusController::class, 'listRoles']);

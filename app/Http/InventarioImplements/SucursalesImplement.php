@@ -267,4 +267,32 @@ class SucursalesImplement
     {
         $connection->table('tiendas')->where('id', $id)->update(["status_id" => 2]);
     }
+
+    /**
+     * Lista los usuarios que no estan asignados a nuguna sucursal
+     *
+     * @param mixed $connection
+     * 
+     * @return [type]
+     * 
+     */
+    function listUserNotBranch($connection)
+    {
+        return  $connection->select('SELECT user.id ,
+        user.fulL_name name_user,
+        user.email,
+        roles.name name_rol,
+        user.direction,
+        user.username,
+        user.ci
+    FROM usuarios user
+        LEFT JOIN usuario_tienda tienda ON user.id = tienda.user_id
+        LEFT JOIN usuario_almacen almacen ON user.id = almacen.user_id
+        INNER JOIN roles ON roles.id = user.rol_id
+    WHERE
+        tienda.user_id IS NULL AND
+        almacen.user_id IS NULL AND
+        user.archivado != 1 AND
+        user.rol_id NOT IN (1, 2)');
+    }
 }
