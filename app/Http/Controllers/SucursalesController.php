@@ -249,4 +249,25 @@ class SucursalesController extends Controller
 
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+
+    /**
+     * Lista todas las sucursales tanto almacenes como tiendas abiertas
+     *
+     * @return array
+     * 
+     */
+    public function getBranchAll()
+    {
+        try {
+
+
+            $data = $this->sucursalesImplement->getBranchAll(
+                DB::connection(),
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
 }

@@ -43,7 +43,10 @@ Route::get('shop/list-shop', [\App\Http\Controllers\SucursalesController::class,
 Route::delete('shop/delete/{id}', [\App\Http\Controllers\SucursalesController::class, 'deleteShop']);
 Route::get('shop/archive/{id}', [\App\Http\Controllers\SucursalesController::class, 'closeShop']);
 
+/* sucursales CRUD */
 Route::get('branch/list-uses', [\App\Http\Controllers\SucursalesController::class, 'listUserNotBranch']);
+Route::get('branch/all-branch', [\App\Http\Controllers\SucursalesController::class, 'getBranchAll']);
+ 
  
 
 

@@ -273,7 +273,7 @@ class SucursalesImplement
      *
      * @param mixed $connection
      * 
-     * @return [type]
+     * @return array
      * 
      */
     function listUserNotBranch($connection)
@@ -294,5 +294,24 @@ class SucursalesImplement
         almacen.user_id IS NULL AND
         user.archivado != 1 AND
         user.rol_id NOT IN (1, 2)');
+    }
+
+    /**
+     * Obtener todas las sucursales disponibles
+     *
+     * @param mixed $connection
+     * 
+     * @return array
+     * 
+     */
+    function getBranchAll($connection)
+    {
+       return  $connection->select("SELECT 'almacen' AS type, a.id, a.name
+       FROM almacenes a
+       WHERE a.status_id != 2
+        UNION ALL
+       SELECT 'tienda' AS type, t.id, t.name
+       FROM tiendas t
+       WHERE t.status_id != 2;");
     }
 }
