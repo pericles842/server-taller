@@ -306,12 +306,66 @@ class SucursalesImplement
      */
     function getBranchAll($connection)
     {
-       return  $connection->select("SELECT 'almacen' AS type, a.id, a.name
+        return  $connection->select("SELECT 'almacen' AS type, a.id, a.name
        FROM almacenes a
        WHERE a.status_id != 2
         UNION ALL
        SELECT 'tienda' AS type, t.id, t.name
        FROM tiendas t
        WHERE t.status_id != 2;");
+    }
+
+
+    /**
+     *Retorna los usuarios de una sucursal
+     *
+     * @param mixed $connection
+     * @param mixed $type_brach
+     * @param mixed $id_branch
+     * 
+     * @return array
+     * 
+     */
+    function getUsersBranch($connection, $type_branch, $id_branch)
+    {
+
+        $body = '';
+
+        if ($type_branch === 'almacen') {
+            $body =  $connection->select("SELECT 
+            user.id user_id,
+            almacenes.id almacen_id ,
+            user.rol_id,
+            almacenes.name ,
+            almacenes.direction,
+            user.fulL_name ,
+            roles.name cargo
+            FROM usuarios user 
+        LEFT JOIN usuario_almacen ON usuario_almacen.user_id = user.id
+        INNER JOIN almacenes ON usuario_almacen.almacen_id = almacenes.id
+        INNER JOIN roles ON user.rol_id = roles.id
+        WHERE  almacenes.status_id != 2  AND  almacenes.id = :id ", [
+                'id' => $id_branch
+            ]);
+        } else { 
+            $body = $connection->select("SELECT 
+            user.id user_id,
+            tiendas.id tienda_id ,
+            user.rol_id,
+            tiendas.name ,
+            tiendas.direction,
+            user.fulL_name ,
+            roles.name cargo
+            FROM usuarios user 
+            LEFT JOIN usuario_tienda ON usuario_tienda.user_id = user.id
+            INNER JOIN tiendas ON usuario_tienda.tienda_id = tiendas.id
+            INNER JOIN roles ON user.rol_id = roles.id
+            WHERE tiendas.status_id != 2 AND tiendas.id = :id ", [
+                "id" => $id_branch
+            ]);
+        }
+
+        $body['typeBranch'] = $type_branch;
+        return $body;
     }
 }

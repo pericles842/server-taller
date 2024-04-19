@@ -270,4 +270,30 @@ class SucursalesController extends Controller
 
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+
+    /**
+     *Obteine los usuarios de una sucursal
+     *
+     * @param Request $request
+     * 
+     * @return [type]
+     * 
+     */
+    public function getUsersBranch(Request $request)
+    {
+        try {
+            if (!$request->filled('type_brach')) throw new \Exception("type_brach es requerido", 400);
+            if (!$request->filled('id_branch')) throw new \Exception("id_branch es requerido", 400);
+
+            $data = $this->sucursalesImplement->getUsersBranch(
+                DB::connection(),
+                $request->type_brach,
+                $request->id_branch
+            );
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
 }
