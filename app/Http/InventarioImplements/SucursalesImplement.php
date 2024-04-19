@@ -339,6 +339,7 @@ class SucursalesImplement
             almacenes.name ,
             almacenes.direction,
             user.fulL_name ,
+            user.email,
             roles.name cargo
             FROM usuarios user 
         LEFT JOIN usuario_almacen ON usuario_almacen.user_id = user.id
@@ -355,6 +356,7 @@ class SucursalesImplement
             tiendas.name ,
             tiendas.direction,
             user.fulL_name ,
+            user.email,
             roles.name cargo
             FROM usuarios user 
             LEFT JOIN usuario_tienda ON usuario_tienda.user_id = user.id
@@ -364,8 +366,11 @@ class SucursalesImplement
                 "id" => $id_branch
             ]);
         }
+ 
 
-        $body['typeBranch'] = $type_branch;
+        foreach($body as $key => $item){
+            $item->typeBranch = $type_branch;
+        }
         return $body;
     }
 }
