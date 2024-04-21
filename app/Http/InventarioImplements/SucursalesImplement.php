@@ -306,11 +306,11 @@ class SucursalesImplement
      */
     function getBranchAll($connection)
     {
-        return  $connection->select("SELECT 'almacen' AS type, a.id, a.name
+        return  $connection->select("SELECT 'almacen' AS type, a.id, a.name , a.direction
        FROM almacenes a
        WHERE a.status_id != 2
         UNION ALL
-       SELECT 'tienda' AS type, t.id, t.name
+       SELECT 'tienda' AS type, t.id, t.name ,t.direction
        FROM tiendas t
        WHERE t.status_id != 2;");
     }
@@ -334,7 +334,7 @@ class SucursalesImplement
         if ($type_branch === 'almacen') {
             $body =  $connection->select("SELECT 
             user.id user_id,
-            almacenes.id almacen_id ,
+            almacenes.id sucursal_id ,
             user.rol_id,
             almacenes.name ,
             almacenes.direction,
@@ -351,7 +351,7 @@ class SucursalesImplement
         } else { 
             $body = $connection->select("SELECT 
             user.id user_id,
-            tiendas.id tienda_id ,
+            tiendas.id sucursal_id ,
             user.rol_id,
             tiendas.name ,
             tiendas.direction,
