@@ -278,10 +278,10 @@ class SucursalesImplement
      */
     function listUserNotBranch($connection)
     {
-        return  $connection->select('SELECT user.id ,
+        return  $connection->select('SELECT user.id user_id ,
         user.fulL_name name_user,
         user.email,
-        roles.name name_rol,
+        roles.name cargo,
         user.direction,
         user.username,
         user.ci
@@ -338,7 +338,7 @@ class SucursalesImplement
             user.rol_id,
             almacenes.name ,
             almacenes.direction,
-            user.fulL_name ,
+            user.fulL_name name_user ,
             user.email,
             roles.name cargo
             FROM usuarios user 
@@ -348,14 +348,14 @@ class SucursalesImplement
         WHERE  almacenes.status_id != 2  AND  almacenes.id = :id ", [
                 'id' => $id_branch
             ]);
-        } else { 
+        } else {
             $body = $connection->select("SELECT 
             user.id user_id,
             tiendas.id sucursal_id ,
             user.rol_id,
             tiendas.name ,
             tiendas.direction,
-            user.fulL_name ,
+            user.fulL_name  name_user,
             user.email,
             roles.name cargo
             FROM usuarios user 
@@ -366,9 +366,9 @@ class SucursalesImplement
                 "id" => $id_branch
             ]);
         }
- 
 
-        foreach($body as $key => $item){
+
+        foreach ($body as $key => $item) {
             $item->typeBranch = $type_branch;
         }
         return $body;
