@@ -138,7 +138,7 @@ class UserImplement
 
             $data =  self::createUser(
                 $connection,
-                $fulL_name,
+                ucwords($fulL_name),
                 $email,
                 $ci,
                 $direction,
@@ -150,7 +150,7 @@ class UserImplement
             $data = self::updateUser(
                 $connection,
                 $id,
-                $fulL_name,
+                ucwords($fulL_name),
                 $email,
                 $ci,
                 $direction,

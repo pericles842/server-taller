@@ -282,6 +282,7 @@ class SucursalesImplement
         user.fulL_name name_user,
         user.email,
         roles.name cargo,
+        user.rol_id,
         user.direction,
         user.username,
         user.ci
