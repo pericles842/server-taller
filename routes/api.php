@@ -38,7 +38,7 @@ Route::get('store/archive/{id}', [\App\Http\Controllers\SucursalesController::cl
 
 /* TIENDAS CRUD */
 Route::post('shop/create', [\App\Http\Controllers\SucursalesController::class, 'createDynamicShop']);
-Route::post('shop/assign-users', [\App\Http\Controllers\SucursalesController::class, 'assignUserToShop']);
+ 
 Route::get('shop/list-shop', [\App\Http\Controllers\SucursalesController::class, 'listShops']);
 Route::delete('shop/delete/{id}', [\App\Http\Controllers\SucursalesController::class, 'deleteShop']);
 Route::get('shop/archive/{id}', [\App\Http\Controllers\SucursalesController::class, 'closeShop']);
@@ -47,9 +47,7 @@ Route::get('shop/archive/{id}', [\App\Http\Controllers\SucursalesController::cla
 Route::get('branch/users-not-branch', [\App\Http\Controllers\SucursalesController::class, 'listUserNotBranch']);
 Route::get('branch/all-branch', [\App\Http\Controllers\SucursalesController::class, 'getBranchAll']);
 Route::post('branch/users', [\App\Http\Controllers\SucursalesController::class, 'getUsersBranch']);
-
-
-
+Route::post('branch/assign-users', [\App\Http\Controllers\SucursalesController::class, 'assignUserToBranch']);
 
 
 /*ROLES DE USUARIOS */

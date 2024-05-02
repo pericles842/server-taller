@@ -43,25 +43,30 @@ class SucursalesController extends Controller
         return response($data, 200)->header('Content-Type', 'application/json');
     }
 
+
     /**
-     * Asigna un usuario a un almacen
+     * ASIGNA VARIOS USUARIOS A UNA SUCURSAL    
      *
      * @param Request $request
      * 
-     * @return [type]
+     * @return array
      * 
      */
-    public function assignUserToStore(Request $request)
+    public function assignUserToBranch(Request $request)
     {
         try {
-            if (!$request->filled('almacen_id')) throw new \Exception("id_almacen es requerido", 400);
-            if (!$request->filled('user_id')) throw new \Exception(" user_id es requerido", 400);
+            if (!$request->filled('ids_users')) throw new \Exception(" ids_users es requerido", 400);
+            if (!$request->filled('id_branch')) throw new \Exception("id_branch es requerido", 400);
+            if (!$request->filled('type_branch')) throw new \Exception(" type_branch es requerido", 400);
+            if (!$request->filled('ids_users_delete')) throw new \Exception(" ids_users_delete es requerido", 400);
 
 
-            $data = $this->sucursalesImplement->assignUserToStore(
+            $data = $this->sucursalesImplement->assignUserToBranch(
                 DB::connection(),
-                $request->almacen_id,
-                $request->user_id
+                $request->id_branch,
+                $request->ids_users,
+                $request->type_branch,
+                $request->ids_users_delete
             );
         } catch (\Exception $e) {
             return $e;

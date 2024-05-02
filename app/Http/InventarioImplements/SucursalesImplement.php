@@ -2,6 +2,7 @@
 
 namespace App\Http\InventarioImplements;
 
+use App\Models\Branch;
 
 class SucursalesImplement
 {
@@ -86,28 +87,6 @@ class SucursalesImplement
     {
         return $connection->select("SELECT almacenes.id, almacenes.name name_store, almacenes.direction ,almacenes.status_id, st.name estatus FROM almacenes 
         INNER JOIN status st ON st.id = almacenes.status_id");
-    }
-
-    /**
-     * Asignar un usuario a un almacen
-     *
-     * @param mixed $connection
-     * @param mixed $id_store
-     * @param mixed $id_user
-     * 
-     * @return array
-     * 
-     */
-    function assignUserToStore($connection, $id_store, $id_user)
-    {
-        $data = [
-            "user_id" => $id_user,
-            "almacen_id" => $id_store
-        ];
-
-        $connection->table('usuario_almacen')->insert($data);
-
-        return $data;
     }
 
     /**
@@ -373,5 +352,61 @@ class SucursalesImplement
             $item->typeBranch = $type_branch;
         }
         return $body;
+    }
+
+    /**
+     * ASIGNA VARIOS USUARIOS A UNA SUCURSAL
+     *
+     * @param mixed $connection
+     * @param mixed $id_branch
+     * @param mixed $ids_users
+     * @param mixed $type_brach
+     * 
+     * @return array
+     * 
+     */
+    function assignUserToBranch($connection, $id_branch, $ids_users, $type_branch,$ids_users_delete)
+    {
+        $branch = new Branch($type_branch);
+
+        $ids_users_create = self::validateUsersBranch($connection, $id_branch, $ids_users, $type_branch);
+
+        foreach ($ids_users_create as $id_user) {
+            $branch->assignUserToBranch($id_branch, $id_user);
+        }
+
+        foreach ($ids_users_delete as $id_user) {
+            $branch->removeUsersFBranch($id_branch, $id_user);
+        }
+         $data = [
+             "sucursal_id" => $id_branch,
+             "typeBranch" => $type_branch,
+             "users_ids" => $ids_users
+         ];
+
+        return $data;  
+    }
+
+    /**
+     * La validación se encargara de retornar los usuarios que no existen en base a los ids_users array
+     *
+     * @param object $connection
+     * @param int $id_branch
+     * @param array $ids_users
+     * @param string $type_branch
+     * 
+     * @return array
+     * 
+     */
+    function validateUsersBranch($connection, $id_branch, $ids_users, $type_branch): array
+    {
+        $branch_table = new Branch($type_branch);
+
+        $ids_query = $connection->table($branch_table->table)
+            ->where($branch_table->table_primary_key, $id_branch)
+            ->pluck('user_id')->all();
+
+        //comparamos los arregos y retornaa los que no existen 
+        return array_values(array_diff($ids_users, $ids_query));
     }
 }

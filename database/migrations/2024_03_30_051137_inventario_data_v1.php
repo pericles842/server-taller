@@ -17,6 +17,12 @@ class InventarioDataV1 extends Migration
         DB::table('roles')->insert([
             [
                 'name' => 'Super Usuario',
+                'modules' => [
+                    'usuarios' => [
+                        'id' => 1,
+                        'authorization' => true
+                    ],
+                ],
                 "read" => 1,
                 "write" => 1,
                 "delete" => 1,

@@ -33,12 +33,7 @@ class InventarioV1 extends Migration
          Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300)->nullable(false)->comment('Nombre del rol');
-            $table->integer('read')->nullable(false)->comment('lectura de formularios');
-            $table->integer('write')->nullable(false)->comment('escritura de formularios');
-            $table->integer('delete')->nullable(false)->comment('Borrar registros');
-            $table->integer('read_documents')->nullable(false)->comment('lectura de documentos');
-            $table->integer('write_documents')->nullable(false)->comment('escritura de documentos');
-            $table->integer('delete_documents')->nullable(false)->comment('eliminación de documentos');
+            $table->json('modules')->nullable(false)->comment('Autorización');
         });
         DB::statement("CALL create_timestamps('roles')");
 
