@@ -1,11 +1,14 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\Charges;
 
 class InventarioDataV1 extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,59 +16,29 @@ class InventarioDataV1 extends Migration
      */
     public function up()
     {
+        $charges = new Charges();
         // DATA TABLA ROLES
         DB::table('roles')->insert([
             [
-                'name' => 'Super Usuario',
-                'modules' => [
-                    'usuarios' => [
-                        'id' => 1,
-                        'authorization' => true
-                    ],
-                ],
-                "read" => 1,
-                "write" => 1,
-                "delete" => 1,
-                "read_documents" => 1,
-                "write_documents" => 1,
-                "delete_documents" => 1,
+                'name' => 'Super Admin',
+                'modules' => $charges->getChargeSuperAdmin()
             ],
             [
                 'name' => 'Administrador',
-                "read" => 1,
-                "write" => 1,
-                "delete" => 1,
-                "read_documents" => 1,
-                "write_documents" => 0,
-                "delete_documents" => 0,
+                'modules' => $charges->getChargeAdmin()
             ],
             [
-                'name' => 'Jefe de almacén',
-                "read" => 1,
-                "write" => 1,
-                "delete" => 0,
-                "read_documents" => 1,
-                "write_documents" => 1,
-                "delete_documents" => 0,
+                'name' => 'Gerente de almacén',
+                'modules' => $charges->getChargeWarehouseManager()
             ],
             [
                 'name' => 'Gerente de tienda',
-                "read" => 1,
-                "write" => 1,
-                "delete" => 0,
-                "read_notes" => 1,
-                "write_notes" => 1,
-                "delete_notes" => 0,
+                'modules' => $charges->getChargeStoreManager()
             ],
             [
                 'name' => 'Empleado',
-                "read" => 1,
-                "write" => 0,
-                "delete" => 0,
-                "read_notes" => 1,
-                "write_notes" => 0,
-                "delete_notes" => 0,
-            ],
+                'modules' => $charges->getChargeJob()
+            ]
         ]);
 
         DB::table('usuarios')->insert([

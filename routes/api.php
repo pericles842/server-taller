@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +24,15 @@ Route::post('user/logout', [\App\Http\Controllers\UserController::class, 'logout
 
 // });
 
+/**Autenteicacion */
+// Route::get('auth', function () {
+//     $a = new Charges();
+//     return $a->getChargeJob();
+// });
+
+/* PERMISOS ROLES CARGOS */
+Route::get('access/user', [\App\Http\Controllers\ChargesController::class, 'getPermissionUser']);
+
 /* USUARIOS CRUD */
 Route::post('user/create', [\App\Http\Controllers\UserController::class, 'createUser']);
 Route::get('user/search/{where}', [\App\Http\Controllers\UserController::class, 'getUser']);
@@ -38,7 +49,7 @@ Route::get('store/archive/{id}', [\App\Http\Controllers\SucursalesController::cl
 
 /* TIENDAS CRUD */
 Route::post('shop/create', [\App\Http\Controllers\SucursalesController::class, 'createDynamicShop']);
- 
+
 Route::get('shop/list-shop', [\App\Http\Controllers\SucursalesController::class, 'listShops']);
 Route::delete('shop/delete/{id}', [\App\Http\Controllers\SucursalesController::class, 'deleteShop']);
 Route::get('shop/archive/{id}', [\App\Http\Controllers\SucursalesController::class, 'closeShop']);
