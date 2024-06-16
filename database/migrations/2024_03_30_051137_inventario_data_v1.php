@@ -40,7 +40,8 @@ class InventarioDataV1 extends Migration
                 'modules' => $charges->getChargeJob()
             ]
         ]);
-
+        
+        //USUARIOS
         DB::table('usuarios')->insert([
             "fulL_name" => 'Louis Sarmiento',
             "email" => 'slouis482@gmail.com',
@@ -52,6 +53,7 @@ class InventarioDataV1 extends Migration
             "rol_id" => '1'
         ]);
 
+        //ESTATUS
         DB::table('status')->insert(
             [
                 "name" => 'Abierto'
