@@ -17,23 +17,64 @@ class CoinsController extends Controller
         $this->coinsImplement = $coinsImplement;
     }
 
-
     /**
-     * ejecuta el metodo listar estatu , si no eres super usuario no se van a ver el registro de super usuario
+     * Guarda y actualiza dinamicamente
      *
      * @param Request $request
      * 
-     * @return [type]
+     * @return array
      * 
      */
-    public function listRoles(Request $request)
+    public function crudCoins(Request $request)
     {
         try {
-          
+            if (!$request->filled('moneda')) throw new \Exception("moneda es requerido", 400);
+            $response = $this->coinsImplement->crudCoins(DB::connection(), $request->moneda);
         } catch (\Exception $e) {
             return $e;
         }
 
-        return response([], 200)->header('Content-Type', 'application/json');
+        return response($response, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Elimina una moneda
+     *
+     * @param Request $request
+     * @param mixed $id
+     * 
+     * @return integer
+     * 
+     */
+    public function deleteCoin($id)
+    {
+        try {
+            if (empty($id)) throw new \Exception("id del registro es requerido", 400);
+
+            $response = $this->coinsImplement->deleteCurrency(DB::connection(), $id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($response, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Obtiene todas las monedas
+     *
+     * @param Request $request
+     * 
+     * @return array
+     * 
+     */
+    public function getCoins(Request $request)
+    {
+        try {
+            $response = $this->coinsImplement->getCoins(DB::connection());
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($response, 200)->header('Content-Type', 'application/json');
     }
 }

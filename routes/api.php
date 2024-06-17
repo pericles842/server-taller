@@ -49,7 +49,6 @@ Route::get('store/archive/{id}', [\App\Http\Controllers\SucursalesController::cl
 
 /* TIENDAS CRUD */
 Route::post('shop/create', [\App\Http\Controllers\SucursalesController::class, 'createDynamicShop']);
-
 Route::get('shop/list-shop', [\App\Http\Controllers\SucursalesController::class, 'listShops']);
 Route::delete('shop/delete/{id}', [\App\Http\Controllers\SucursalesController::class, 'deleteShop']);
 Route::get('shop/archive/{id}', [\App\Http\Controllers\SucursalesController::class, 'closeShop']);
@@ -60,6 +59,10 @@ Route::get('branch/all-branch', [\App\Http\Controllers\SucursalesController::cla
 Route::post('branch/users', [\App\Http\Controllers\SucursalesController::class, 'getUsersBranch']);
 Route::post('branch/assign-users', [\App\Http\Controllers\SucursalesController::class, 'assignUserToBranch']);
 
-
 /*ROLES DE USUARIOS */
 Route::get('status/list-roles', [\App\Http\Controllers\StatusController::class, 'listRoles']);
+
+/*MONEDAS Y TASAS */
+Route::post('coin', [\App\Http\Controllers\CoinsController::class, 'crudCoins']);
+Route::delete('coin/{id}', [\App\Http\Controllers\CoinsController::class, 'deleteCoin']);
+Route::get('coin', [\App\Http\Controllers\CoinsController::class, 'getCoins']);
