@@ -32,6 +32,7 @@ class CoinsImplement
      */
     private function updateCurrency($connection, $data_coin)
     {
+
         $connection->table('monedas')->where('id', $data_coin['id'])->update($data_coin);
         return $data_coin;
     }
@@ -47,6 +48,9 @@ class CoinsImplement
      */
     public function deleteCurrency($connection, $id)
     {
+        $prev_coin = $connection->table('monedas')->where('id', $id)->first();
+        if ($prev_coin->default == 0) throw new \Exception("No puedes borrar una moneda en uso", 400);
+
         return $connection->table('monedas')->where('id', $id)->delete();
     }
 
@@ -74,6 +78,17 @@ class CoinsImplement
      */
     public function crudCoins($connection, $data)
     {
+
+        //validamos el cambio de los default , editamos el anterior y le damos prioridad al actual
+        if (intval($data['default']) == 0) {
+            $prev_coin = $connection->table('monedas')->where('default', 0)->first();
+
+            if (isset($prev_coin)) {
+                $prev_coin->default = 1;
+                $this->updateCurrency($connection, (array)$prev_coin);
+            }
+        }
+
         $data = empty($data['id']) ? $this->createCurrency($connection, $data) : $data = $this->updateCurrency($connection, $data);
 
         return $data;
@@ -89,9 +104,29 @@ class CoinsImplement
      * @return array
      * 
      */
-    public function saveCurrencyPrecio($connection, int $id_coin,  float $price)
+    public function savePriceToACurrency($connection, $data)
     {
-        $data = ["id_coin" => $id_coin, "price" => $price];
-        return $connection->table('tasas')->insert($data);
+        $connection->table('tasas')->insert($data);
+        return $data;
+    }
+
+    /**
+     * actualiza la tasa de una moneda<
+     *
+     * @param mixed $connection
+     * @param mixed $data
+     * 
+     * @return array
+     * 
+     */
+    public function updatePriceToACurrency($connection, $data)
+    {
+        $data = [
+            'price' => $data['price'],
+            'id' => $data['id']
+        ];
+
+        $connection->table('tasas')->where('id', $data['id'])->update($data);
+        return $data;
     }
 }

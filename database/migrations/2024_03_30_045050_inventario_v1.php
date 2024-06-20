@@ -122,7 +122,7 @@ class InventarioV1 extends Migration
             $table->id();
             $table->foreignId('id_coin')->nullable(false)->comment('id tabla moneda')
                 ->references('id')->on('monedas')->onDelete('cascade')->onUpdate('cascade');
-            $table->decimal('price', 3, 2)->nullable(false)->comment('tasas según la moneda');
+                $table->decimal('price', 5, 2)->nullable(false)->comment('tasas según la moneda');
         });
         DB::statement("CALL create_timestamps('tasas')");
     }

@@ -66,3 +66,6 @@ Route::get('status/list-roles', [\App\Http\Controllers\StatusController::class, 
 Route::post('coin', [\App\Http\Controllers\CoinsController::class, 'crudCoins']);
 Route::delete('coin/{id}', [\App\Http\Controllers\CoinsController::class, 'deleteCoin']);
 Route::get('coin', [\App\Http\Controllers\CoinsController::class, 'getCoins']);
+Route::post('coin/price', [\App\Http\Controllers\CoinsController::class, 'savePriceToACurrency']);
+Route::put('coin/price', [\App\Http\Controllers\CoinsController::class, 'updatePriceToACurrency']);
+    
