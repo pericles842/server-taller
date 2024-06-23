@@ -64,7 +64,37 @@ class CoinsImplement
      */
     public function getCoins($connection)
     {
-        return  $connection->table('monedas')->get();
+
+        $monedas =   $connection->select("SELECT
+        monedas.id,
+        monedas.name,
+        monedas.iso,
+        monedas.default,
+        CONCAT(
+                '[',
+                GROUP_CONCAT(
+                        JSON_OBJECT(
+                                'id',
+                                tasas.id,
+                                'price',
+                                tasas.price,
+                                'created_at',
+                                tasas.created_at
+                        )
+                ),
+                ']'
+        ) AS tasas
+        FROM    
+        monedas
+        LEFT JOIN tasas ON tasas.id_coin = monedas.id
+        GROUP BY monedas.id
+        ORDER BY monedas.default");
+
+        foreach ($monedas as $key => $moneda) {
+            $monedas[$key]->tasas = json_decode($moneda->tasas);
+        }
+
+        return $monedas;
     }
 
     /**
@@ -80,11 +110,11 @@ class CoinsImplement
     {
 
         //validamos el cambio de los default , editamos el anterior y le damos prioridad al actual
-        if (intval($data['default']) == 0) {
-            $prev_coin = $connection->table('monedas')->where('default', 0)->first();
+        if (intval($data['default']) == 1) {
+            $prev_coin = $connection->table('monedas')->where('default', 1)->first();
 
             if (isset($prev_coin)) {
-                $prev_coin->default = 1;
+                $prev_coin->default = 0;
                 $this->updateCurrency($connection, (array)$prev_coin);
             }
         }
@@ -106,7 +136,7 @@ class CoinsImplement
      */
     public function savePriceToACurrency($connection, $data)
     {
-        $connection->table('tasas')->insert($data);
+        $data['id'] = $connection->table('tasas')->insertGetId($data);
         return $data;
     }
 

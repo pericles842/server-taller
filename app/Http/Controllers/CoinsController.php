@@ -73,6 +73,7 @@ class CoinsController extends Controller
         try {
             $response = $this->coinsImplement->getCoins(DB::connection());
         } catch (\Exception $e) {
+            dump($e);
             return $e;
         }
 
