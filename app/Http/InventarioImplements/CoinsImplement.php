@@ -74,12 +74,11 @@ class CoinsImplement
                 '[',
                 GROUP_CONCAT(
                         JSON_OBJECT(
-                                'id',
-                                tasas.id,
-                                'price',
-                                tasas.price,
-                                'created_at',
-                                tasas.created_at
+                                'id',tasas.id,
+                                'father_currency',monedas.name,
+                                'price',tasas.price,
+                                'created_at', tasas.created_at,
+                                'updated_at', tasas.updated_at
                         )
                 ),
                 ']'
