@@ -66,28 +66,32 @@ class CoinsImplement
     {
 
         $monedas =   $connection->select("SELECT
-        monedas.id,
-        monedas.name,
-        monedas.iso,
-        monedas.default,
-        CONCAT(
-                '[',
-                GROUP_CONCAT(
-                        JSON_OBJECT(
-                                'id',tasas.id,
-                                'father_currency',monedas.name,
-                                'price',tasas.price,
-                                'created_at', tasas.created_at,
-                                'updated_at', tasas.updated_at
-                        )
-                ),
-                ']'
-        ) AS tasas
-        FROM    
-        monedas
-        LEFT JOIN tasas ON tasas.id_coin = monedas.id
-        GROUP BY monedas.id
-        ORDER BY monedas.default");
+    monedas.id,
+    monedas.name,
+    monedas.iso,
+    monedas.default,
+    CONCAT(
+        '[',
+        IF(
+            COUNT(tasas.id) > 0,
+            GROUP_CONCAT(
+                JSON_OBJECT(
+                    'id', tasas.id,
+                    'father_currency', monedas.name,
+                    'price', tasas.price,
+                    'created_at', tasas.created_at,
+                    'updated_at', tasas.updated_at
+                )
+            ),
+            ''
+        ),
+        ']'
+    ) as tasas
+    FROM monedas
+    LEFT JOIN 
+        tasas ON tasas.id_coin = monedas.id
+    GROUP BY monedas.id
+    ORDER BY monedas.default;");
 
         foreach ($monedas as $key => $moneda) {
             $monedas[$key]->tasas = json_decode($moneda->tasas);
