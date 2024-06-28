@@ -68,12 +68,11 @@ class CoinsController extends Controller
      * @return array
      * 
      */
-    public function getCoins(Request $request)
+    public function getCoins()
     {
         try {
             $response = $this->coinsImplement->getCoins(DB::connection());
         } catch (\Exception $e) {
-            dump($e);
             return $e;
         }
 
