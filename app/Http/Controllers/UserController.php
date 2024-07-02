@@ -29,6 +29,7 @@ class UserController extends Controller
     {
         try {
             if (!$request->filled('name_user')) throw new \Exception("Nombre es requerido", 400);
+            
             if (!$request->filled('email')) throw new \Exception("Email es requerido", 400);
             if (!$request->filled('username')) throw new \Exception("Username es requerido", 400);
             if (!$request->filled('password')) throw new \Exception("Password es requerido", 400);
@@ -65,13 +66,9 @@ class UserController extends Controller
     public function authenticateUser(Request $request)
     {
         try {
-            if (!$request->filled('username')) {
-                throw new \Exception("Username es requerido", 400);
-            }
+            if (!$request->filled('username')) throw new \Exception("username es requerido", 400);
 
-            if (!$request->filled('password')) {
-                throw new \Exception("Password es requerido", 400);
-            }
+            if (!$request->filled('password')) throw new \Exception("password es requerido", 400);
 
             $response =  $this->userImplement->authenticateUser(
                 DB::connection(),
