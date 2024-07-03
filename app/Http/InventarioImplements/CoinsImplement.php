@@ -49,7 +49,7 @@ class CoinsImplement
     public function deleteCurrency($connection, $id)
     {
         $prev_coin = $connection->table('monedas')->where('id', $id)->first();
-        if ($prev_coin->default == 0) throw new \Exception("No puedes borrar una moneda en uso", 400);
+        if ($prev_coin->default == 1) throw new \Exception("No puedes borrar una moneda en uso", 400);
 
         return $connection->table('monedas')->where('id', $id)->delete();
     }
@@ -122,7 +122,7 @@ class CoinsImplement
             }
         }
 
-        $data = empty($data['id']) ? $this->createCurrency($connection, $data) : $data = $this->updateCurrency($connection, $data);
+        $data = (empty($data['id']) or  $data['id'] == -1) ?  $this->createCurrency($connection, $data) : $this->updateCurrency($connection, $data);
 
         return $data;
     }
