@@ -65,7 +65,7 @@ class CoinsImplement
     public function getCoins($connection)
     {
         //VALIDA Y ELIMINA LAS TASAS VIEJAS
-        $this->validateCreateRate($connection);
+       // $this->validateCreateRate($connection);
 
         $monedas =   $connection->select("SELECT
     monedas.id,
