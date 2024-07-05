@@ -68,4 +68,4 @@ Route::delete('coin/{id}', [\App\Http\Controllers\CoinsController::class, 'delet
 Route::get('coin', [\App\Http\Controllers\CoinsController::class, 'getCoins']);
 Route::post('coin/price', [\App\Http\Controllers\CoinsController::class, 'savePriceToACurrency']);
 Route::put('coin/price', [\App\Http\Controllers\CoinsController::class, 'updatePriceToACurrency']);
-    
+Route::delete('coin/price/{id}', [\App\Http\Controllers\CoinsController::class, 'deletePriceToCurrency']);

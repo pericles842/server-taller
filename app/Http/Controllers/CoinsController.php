@@ -120,4 +120,24 @@ class CoinsController extends Controller
 
         return response($response, 200)->header('Content-Type', 'application/json');
     }
+
+    /**
+     * elimina un precio
+     *
+     * @param mixed $id
+     * 
+     * @return [type]
+     * 
+     */
+    public function deletePriceToCurrency($id)
+    {
+        try {
+
+            $response = $this->coinsImplement->deletePriceToCurrency(DB::connection(), $id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($response, 200)->header('Content-Type', 'application/json');
+    }
 }

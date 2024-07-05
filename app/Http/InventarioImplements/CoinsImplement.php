@@ -65,7 +65,7 @@ class CoinsImplement
     public function getCoins($connection)
     {
         //VALIDA Y ELIMINA LAS TASAS VIEJAS
-       // $this->validateCreateRate($connection);
+        // $this->validateCreateRate($connection);
 
         $monedas =   $connection->select("SELECT
     monedas.id,
@@ -165,13 +165,17 @@ class CoinsImplement
         return $data;
     }
 
-    //  private deleteOutdatedRate(){
-
-    // }
-    private function validateCreateRate($connection)
+    /**
+     * Elimina una tasa
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * 
+     * @return mixed
+     * 
+     */
+    public function deletePriceToCurrency($connection, $id)
     {
-        $tasas = $connection->table('tasas')->orderBy('created_at')->get();
-       // dump();
-        if (count($tasas) == 7) $connection->table('tasas')->where('id', $tasas[count($tasas) - 1]['id'])->delete();
+        return $connection->table('tasas')->where('id', $id)->delete();
     }
 }
