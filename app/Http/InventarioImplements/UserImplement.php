@@ -85,7 +85,7 @@ class UserImplement
         ];
 
         $connection->table('usuarios')->where('id', $id)->update($data);
-        
+
         $data['id'] = $id;
         return $data;
     }
@@ -173,7 +173,8 @@ class UserImplement
      */
     public function getUser($connection, $username)
     {
-        return  $connection->selectOne("SELECT user.id,
+        $monedas = $connection->table('monedas')->select('id', 'iso', 'name')->where('default', 1)->first();
+        $user = $connection->selectOne("SELECT user.id,
                     user.fulL_name  name_user,
                     user.email,
                     user.ci,
@@ -186,6 +187,9 @@ class UserImplement
                 iNNER JOIN roles 
                     ON roles.id = user.rol_id 
                 WHERE user.username = :username", ["username" => $username]);
+
+        $user->config = $monedas;
+        return $user;
     }
 
     /**
