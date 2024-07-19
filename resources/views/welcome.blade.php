@@ -406,7 +406,7 @@
 
 <body class="antialiased">
   <div style="color:white; gap:20px" class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-    <h1 style="font-size:4vw;">Inventario Taller</h1>
+    <h1 style="font-size:4vw;">Light inventory</h1>
 
     <p style="color: 2e69ff; background-color: #2e69ff;
     padding: 3px 10px;
