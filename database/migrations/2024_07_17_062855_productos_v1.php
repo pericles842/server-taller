@@ -22,16 +22,12 @@ class ProductosV1 extends Migration
             $table->id();
             $table->string('name', 500)->nullable(false);
             $table->string('description', 800)->nullable(true);
-            $table->float('price')->nullable(false);
-            $table->float('price_unitario')->nullable(false);
-            $table->integer('discount')->nullable(true);
-            $table->integer('iva')->nullable(false);
-            $table->boolean('active_discount')->nullable(false);
 
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
-                ->references('id')->on('usuarios')
-                ->onDelete('restrict')
-                ->onUpdate('cascade');
+                ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
+
+            $table->date('fecha_inicio')->nullable(false)->comment('a partir de donde comienza esta lista de precio');
+            $table->date('fecha_fin')->nullable(false)->comment('Cuando finaliza esta lista de precio');
         });
         DB::statement("CALL create_timestamps('price_list')");
 
@@ -47,6 +43,7 @@ class ProductosV1 extends Migration
                 ->onUpdate('cascade');
         });
         DB::statement("CALL create_timestamps('category')");
+
 
         //------------------------------------------------------------------------------------
         //*TABLA DE PRODUCTOS
@@ -64,10 +61,36 @@ class ProductosV1 extends Migration
             $table->foreignId('category_id')->nullable(false)->comment('id del usuario')
                 ->references('id')->on('category')->onDelete('restrict')->onUpdate('cascade');
 
+            $table->foreignId('price_list_id')->nullable(false)->comment('id de la lista de precios')
+                ->references('id')->on('price_list')->onDelete('restrict')->onUpdate('cascade');
+
             $table->foreignId('created_user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
         });
         DB::statement("CALL create_timestamps('products')");
+
+        //------------------------------------------------------------------------------------
+        //*TABLA LISTA DE PRECIOS DETALLES
+        //------------------------------------------------------------------------------------
+        Schema::create('price_list_detail', function (Blueprint $table) {
+            $table->id();
+            $table->float('price')->nullable(false);
+            $table->float('price_unitario')->nullable(false);
+            $table->integer('discount')->nullable(true);
+            $table->integer('iva')->nullable(false);
+            $table->boolean('active_discount')->nullable(false);
+
+            $table->foreignId('product_id')->nullable(false)->comment('id del producto')
+                ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
+
+            $table->foreignId('price_list_id')->nullable(false)->comment('id de la lista de precios')
+                ->references('id')->on('price_list')->onDelete('restrict')->onUpdate('cascade');
+
+
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+                ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
+        });
+        DB::statement("CALL create_timestamps('price_list_detail')");
 
         //------------------------------------------------------------------------------------
         //*TABLA DETALLE DE PRODUCTOS DE VENTA
@@ -78,9 +101,6 @@ class ProductosV1 extends Migration
                 ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
             $table->string('talla', 5)->nullable(false);
             $table->string('reference', 300)->nullable(true);
-
-            $table->foreignId('price_list_id')->nullable(false)->comment('id de la lista de precios')
-                ->references('id')->on('price_list')->onDelete('restrict')->onUpdate('cascade');
 
             $table->foreignId('created_user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
@@ -95,10 +115,6 @@ class ProductosV1 extends Migration
             $table->foreignId('product_id')->nullable(false)->comment('id del producto')
                 ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
             $table->json('detalle')->nullable(true)->comment('detalles del producto ');
-
-
-            $table->foreignId('price_list_id')->nullable(false)->comment('id de la lista de precios')
-                ->references('id')->on('price_list')->onDelete('restrict')->onUpdate('cascade');
 
             $table->foreignId('created_user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
@@ -115,6 +131,7 @@ class ProductosV1 extends Migration
     {
         Schema::dropIfExists('category');
         Schema::dropIfExists('price_list');
+        Schema::dropIfExists('price_list_detail');
         Schema::dropIfExists('products');
         Schema::dropIfExists('products_sales');
         Schema::dropIfExists('products_production');
