@@ -37,11 +37,16 @@ class ProductosV1 extends Migration
         Schema::create('category', function (Blueprint $table) {
             $table->id();
             $table->string('name', 500)->nullable(false);
-            $table->foreignId('created_user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+            $table->unsignedBigInteger('father_category_id')->nullable(true); // Campo opcional
+            $table->foreign('father_category_id')->references('id')->on('category')
+                ->onDelete('cascade'); // Elimina en cascada al borrar el padre
+
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
         });
+
         DB::statement("CALL create_timestamps('category')");
 
 
@@ -51,9 +56,10 @@ class ProductosV1 extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name', 500)->nullable(false);
-            $table->integer('sku')->nullable(true);
+            $table->integer('sku')->unique()->nullable(true);
             $table->string('color', 100)->nullable(true);
             $table->enum('tipo', ['production', 'sale']);
+            $table->string('reference', 300)->unique()->nullable(true);
 
             $table->foreignId('status_id')->nullable(false)->comment('id del usuario')
                 ->references('id')->on('status')->onDelete('restrict')->onUpdate('cascade');
@@ -64,7 +70,7 @@ class ProductosV1 extends Migration
             $table->foreignId('price_list_id')->nullable(false)->comment('id de la lista de precios')
                 ->references('id')->on('price_list')->onDelete('restrict')->onUpdate('cascade');
 
-            $table->foreignId('created_user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
         });
         DB::statement("CALL create_timestamps('products')");
@@ -75,7 +81,7 @@ class ProductosV1 extends Migration
         Schema::create('price_list_detail', function (Blueprint $table) {
             $table->id();
             $table->float('price')->nullable(false);
-            $table->float('price_unitario')->nullable(false);
+            $table->float('net_price')->nullable(false);
             $table->integer('discount')->nullable(true);
             $table->integer('iva')->nullable(false);
             $table->boolean('active_discount')->nullable(false);
@@ -100,9 +106,8 @@ class ProductosV1 extends Migration
             $table->foreignId('product_id')->nullable(false)->comment('id del producto')
                 ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
             $table->string('talla', 5)->nullable(false);
-            $table->string('reference', 300)->nullable(true);
 
-            $table->foreignId('created_user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
         });
         DB::statement("CALL create_timestamps('products_sales')");
@@ -116,10 +121,44 @@ class ProductosV1 extends Migration
                 ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
             $table->json('detalle')->nullable(true)->comment('detalles del producto ');
 
-            $table->foreignId('created_user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
         });
         DB::statement("CALL create_timestamps('products_production')");
+
+
+        //------------------------------------------------------------------------------------
+        //*TABLA PRODUCTOS EN UNA TIENDA
+        //------------------------------------------------------------------------------------
+        Schema::create('product_store', function (Blueprint $table) {
+
+            $table->foreignId('product_id')->nullable(false)->comment('id del producto')
+                ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
+
+            $table->foreignId('store_id')->nullable(false)->comment('id de la tienda')
+                ->references('id')->on('tiendas')->onDelete('restrict')->onUpdate('cascade');
+
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+                ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
+        });
+        DB::statement("CALL create_timestamps('product_store')");
+
+
+        //------------------------------------------------------------------------------------
+        //*TABLA PRODUCTOS EN UNA ALMACEN
+        //------------------------------------------------------------------------------------
+        Schema::create('product_warehouse', function (Blueprint $table) {
+
+            $table->foreignId('product_id')->nullable(false)->comment('id del producto')
+                ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
+
+            $table->foreignId('warehouse_id')->nullable(false)->comment('id del almacen')
+                ->references('id')->on('almacenes')->onDelete('restrict')->onUpdate('cascade');
+
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+                ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
+        });
+        DB::statement("CALL create_timestamps('product_warehouse')");
     }
 
     /**
@@ -135,5 +174,7 @@ class ProductosV1 extends Migration
         Schema::dropIfExists('products');
         Schema::dropIfExists('products_sales');
         Schema::dropIfExists('products_production');
+        Schema::dropIfExists('product_store');
+        Schema::dropIfExists('product_warehouse');
     }
 }
