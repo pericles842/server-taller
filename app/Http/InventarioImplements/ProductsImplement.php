@@ -90,17 +90,15 @@ class ProductsImplement
         }
     }
 
-    function createProductoProduction($connection, $product_id, $detalles,$user_id)
+    function createProductoProduction($connection, $product_id, $detalles, $user_id)
     {
         $product_production = [
-            "product_id"=>$product_id,
-            "detalle"=>$detalles,
-            "user_id"=>$user_id
+            "product_id" => $product_id,
+            "detalle" => $detalles,
+            "user_id" => $user_id
         ];
         $connection->table('products_production')->insert($product_production);
     }
 
-    function createProductSales()
-    {
-    }
+    function createProductSales() {}
 }
