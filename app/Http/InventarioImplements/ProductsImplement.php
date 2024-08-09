@@ -100,5 +100,7 @@ class ProductsImplement
         $connection->table('products_production')->insert($product_production);
     }
 
-    function createProductSales() {}
+    function createProductSales() {
+
+    }
 }
