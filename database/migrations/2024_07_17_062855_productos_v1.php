@@ -71,7 +71,7 @@ class ProductosV1 extends Migration
             $table->foreignId('category_id')->nullable(false)->comment('id del usuario')
                 ->references('id')->on('category')->onDelete('restrict')->onUpdate('cascade');
 
-            $table->foreignId('price_list_id')->nullable(false)->comment('id de la lista de precios')
+            $table->foreignId('price_list_id')->nullable(true)->comment('id de la lista de precios')
                 ->references('id')->on('price_list')->onDelete('restrict')->onUpdate('cascade');
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
@@ -108,8 +108,8 @@ class ProductosV1 extends Migration
         //------------------------------------------------------------------------------------
         Schema::create('products_production', function (Blueprint $table) {
 
-            $table->foreignId('product_id')->nullable(false)->comment('id del producto')
-                ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('product_id')->nullable(false)->unique()->comment('id del producto')
+                ->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->json('detalle')->nullable(true)->comment('detalles del producto ');
 
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')

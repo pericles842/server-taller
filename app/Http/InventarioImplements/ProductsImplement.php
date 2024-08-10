@@ -42,29 +42,30 @@ class ProductsImplement
     /**
      * crea y  actualiza dinamicamente
      *
-     * @param mixed $connection
-     * @param mixed $name
-     * @param mixed $id
-     * @param mixed $sku
-     * @param mixed $color
-     * @param mixed $tipo
-     * @param mixed $reference
-     * @param mixed $status_id
-     * @param mixed $category_id
-     * @param mixed $price_list_id
-     * @param mixed $user_id
+     * @param Illuminate\Support\Facades\DB $connection
+     * @param string $name
+     * @param integer $id
+     * @param string $sku
+     * @param string $color
+     * @param string $tipo
+     * @param string $reference
+     * @param integer $status_id
+     * @param integer $category_id
+     * @param integer $price_list_id
+     * @param integer $user_id
      * 
      * @return array
      * 
      */
-    function createProductHeader(
+    function createProduct(
         $connection,
-        $name,
         $id,
+        $name,
         $sku,
         $color,
         $tipo,
         $reference,
+        $talla,
         $status_id,
         $category_id,
         $price_list_id,
@@ -77,20 +78,35 @@ class ProductsImplement
             "sku" => $sku,
             "color" => $color,
             "tipo" => $tipo,
+            "talla" => strtoupper($talla),
             "reference" => $reference,
             "status_id" => $status_id,
             "category_id" => $category_id,
             "price_list_id" => $price_list_id,
             "user_id" => $user_id,
         ];
+
         if ($id == null || $id == 0) {
             $product['id'] = $connection->table('products')->insertGetId($product);
         } else {
             $connection->table('products')->where('id', $id)->update($product);
         }
+
+        return  $product;
     }
 
-    function createProductoProduction($connection, $product_id, $detalles, $user_id)
+    /**
+     *Crea un producto para la producción, es decir crea la materia prima
+     *
+     * @param Illuminate\Support\Facades\DB $connection
+     * @param integer $product_id
+     * @param array $detalles
+     * @param integer $user_id
+     * 
+     * @return array
+     * 
+     */
+    function createProductProduction($connection, $product_id, $detalles, $user_id)
     {
         $product_production = [
             "product_id" => $product_id,
@@ -100,7 +116,39 @@ class ProductsImplement
         $connection->table('products_production')->insert($product_production);
     }
 
-    function createProductSales() {
+    /**
+     * Crea un producto dinamicamente
+     *
+     * @param mixed $connection
+     * @param mixed $product
+     * @param array $detalle
+     * 
+     * @return array
+     * 
+     */
+    function dynamicCreateProduct($connection, $user_id, $product, $detalle = [])
+    {
 
+        $data = $this->createProduct(
+            $connection,
+            $product['id'],
+            $product['name'],
+            $product['sku'],
+            $product['color'],
+            $product['tipo'],
+            $product['reference'],
+            $product['talla'],
+            $product['status_id'],
+            $product['category_id'],
+            $product['price_list_id'],
+            $user_id
+        );
+         
+        if ($product['tipo'] == 'production') {
+            $this->createProductProduction($connection, $data['id'], json_encode($detalle), $user_id);
+            $data['detalles'] = $detalle;
+        }
+
+        return $data;
     }
 }

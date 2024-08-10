@@ -40,7 +40,7 @@ class InventarioDataV1 extends Migration
                 'modules' => $charges->getChargeJob()
             ]
         ]);
-        
+
         //USUARIOS
         DB::table('usuarios')->insert([
             "fulL_name" => 'Louis Sarmiento',
@@ -56,10 +56,24 @@ class InventarioDataV1 extends Migration
         //ESTATUS
         DB::table('status')->insert(
             [
-                "name" => 'Abierto'
-            ],
+                [
+                    "name" => "Abierto"
+                ],
+                [
+                    "name" => "Cerrado"
+                ],
+                [
+                    "name" => "Activo"
+                ]
+            ]
+        );
+
+        //MONEDA DEL SISTEMA
+        DB::table('monedas')->insert(
             [
-                "name" => 'Cerrado'
+                "iso" => "USD",
+                "name" => "DOLAR AMERICANO",
+                "default" => 1,
             ]
         );
     }
@@ -74,5 +88,6 @@ class InventarioDataV1 extends Migration
         DB::table('roles')->truncate();
         DB::table('usuarios')->truncate();
         DB::table('status')->truncate();
+        DB::table('monedas')->truncate();
     }
 }
