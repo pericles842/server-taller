@@ -125,10 +125,10 @@ class ProductosV1 extends Migration
         Schema::create('products_stores', function (Blueprint $table) {
 
             $table->foreignId('product_id')->nullable(false)->comment('id del producto')
-                ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
+                ->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
 
             $table->foreignId('branch_id')->nullable(false)->comment('id de la tienda')
-                ->references('id')->on('tiendas')->onDelete('restrict')->onUpdate('cascade');
+                ->references('id')->on('tiendas')->onDelete('cascade')->onUpdate('cascade');
 
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
@@ -143,10 +143,10 @@ class ProductosV1 extends Migration
         Schema::create('products_warehouses', function (Blueprint $table) {
 
             $table->foreignId('product_id')->nullable(false)->comment('id del producto')
-                ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
+                ->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
 
             $table->foreignId('branch_id')->nullable(false)->comment('id del almacen')
-                ->references('id')->on('almacenes')->onDelete('restrict')->onUpdate('cascade');
+                ->references('id')->on('almacenes')->onDelete('cascade')->onUpdate('cascade');
 
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');

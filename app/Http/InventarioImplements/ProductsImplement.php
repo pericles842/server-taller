@@ -69,7 +69,9 @@ class ProductsImplement
         $status_id,
         $category_id,
         $price_list_id,
-        $user_id
+        $user_id,
+        $type_branch,
+        $branch_id
     ) {
 
         $product = [
@@ -83,15 +85,18 @@ class ProductsImplement
             "status_id" => $status_id,
             "category_id" => $category_id,
             "price_list_id" => $price_list_id,
-            "user_id" => $user_id,
+            "user_id" => $user_id
         ];
 
         if ($id == null || $id == 0) {
             $product['id'] = $connection->table('products')->insertGetId($product);
+            $this->assignProductToBranch($connection, $product['id'], $branch_id, $user_id, $type_branch);
         } else {
             $connection->table('products')->where('id', $id)->update($product);
+            $this->updateProductsAssignedToBranches($connection, $product['id'], $branch_id, $user_id, $type_branch);
         }
-
+        $product["type_branch"] = $type_branch;
+        $product["branch_id"] = $branch_id;
         return  $product;
     }
 
@@ -156,6 +161,9 @@ class ProductsImplement
         if ($product['tipo'] == 'sale' && $product['price_list_id'] == null) throw new \Exception("Los productos para la venta debe tener
          'price_list_id' requerido", 400);
 
+        if ($product['tipo'] == 'production' && $product['type_branch'] == 'tienda') throw new \Exception("Los productos para la
+         producción no pueden ser asignarse a tiendas", 400);
+
         $data = $this->createProduct(
             $connection,
             $product['id'],
@@ -168,7 +176,9 @@ class ProductsImplement
             $product['status_id'],
             $product['category_id'],
             $product['price_list_id'],
-            $user_id
+            $user_id,
+            $product['type_branch'],
+            $product['branch_id']
         );
 
         if ($product['tipo'] == 'production') {
@@ -197,10 +207,22 @@ class ProductsImplement
         return $connection->table('products')->where('id', $id)->delete();
     }
 
+    /**
+     * Asigna un producto a una sucursal
+     *
+     * @param mixed $connection
+     * @param mixed $product_id
+     * @param mixed $branch_id
+     * @param mixed $user_id
+     * @param mixed $type_branch
+     * 
+     * @return array
+     * 
+     */
     function  assignProductToBranch($connection, $product_id, $branch_id, $user_id, $type_branch)
     {
         $table = [
-            'almacen' => 'products_branches',
+            'almacen' => 'products_warehouses',
             'tienda' => 'products_stores'
         ];
 
@@ -209,5 +231,48 @@ class ProductsImplement
             'branch_id' => $branch_id,
             'user_id' => $user_id
         ]);
+    }
+
+    /**
+     * Actualiza un producto asignado a una sucursal
+     *
+     * @param mixed $connection The database connection object.
+     * @param int $product_id The ID of the product to update.
+     * @param int $branch_id The ID of the branch to assign to the product.
+     * @param int $user_id The ID of the user to assign to the product.
+     * @param string $type_branch The type of branch ('almacen' or 'tienda').
+     * @return int The number of rows affected by the update query.
+     */
+    function  updateProductsAssignedToBranches($connection, $product_id, $branch_id, $user_id, $type_branch)
+    {
+        $table = [
+            'almacen' => 'products_warehouses',
+            'tienda' => 'products_stores'
+        ];
+
+        return $connection->table($table[$type_branch])->where('product_id', $product_id)->where('branch_id', $branch_id)
+            ->update([
+                'branch_id' => $branch_id,
+                'user_id' => $user_id
+            ]);
+    }
+
+    /**
+     * Elimina un producto asignado a una sucursal
+     *
+     * @param mixed $connection
+     * @param mixed $product_id
+     * @param mixed $type_branch
+     * 
+     * @return [type]
+     * 
+     */
+    function deleteProductsAssignedToBranches($connection, $product_id, $branch_id, $type_branch)
+    {
+        $table = [
+            'almacen' => 'products_branches',
+            'tienda' => 'products_stores'
+        ];
+        return $connection->table($table[$type_branch])->where('product_id', $product_id)->where('branch_id', $branch_id)->delete();
     }
 }
