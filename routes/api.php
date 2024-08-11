@@ -72,3 +72,4 @@ Route::delete('coin/price/{id}', [\App\Http\Controllers\CoinsController::class, 
 
 /*PRODUCTOS */
 Route::post('product', [\App\Http\Controllers\ProductsController::class, 'dynamicCreateProduct']);
+Route::delete('product/{id}', [\App\Http\Controllers\ProductsController::class, 'deleteProduct']);

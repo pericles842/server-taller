@@ -39,8 +39,8 @@ class ProductsController extends Controller
                 // 'product.price_list_id' => 'required|numeric',
                 'product.status_id' => 'required|numeric'
             ]);
-            
-              
+
+
             // Verificar si la validación falla
             if ($validator->fails()) return response()->json($validator->errors(), 400);
 
@@ -56,5 +56,26 @@ class ProductsController extends Controller
         }
 
         return response($response, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     *Elimina un producto y sus conjuntos
+     *
+     * @param mixed $id
+     * 
+     * @return [type]
+     * 
+     */
+    public function deleteProduct($id)
+    {
+        try {
+
+            $data = $this->productsImplement->deleteProduct(DB::connection(), $id);
+        } catch (\Exception $e) {
+
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
     }
 }

@@ -127,7 +127,7 @@ class ProductosV1 extends Migration
             $table->foreignId('product_id')->nullable(false)->comment('id del producto')
                 ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
 
-            $table->foreignId('store_id')->nullable(false)->comment('id de la tienda')
+            $table->foreignId('branch_id')->nullable(false)->comment('id de la tienda')
                 ->references('id')->on('tiendas')->onDelete('restrict')->onUpdate('cascade');
 
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
@@ -145,7 +145,7 @@ class ProductosV1 extends Migration
             $table->foreignId('product_id')->nullable(false)->comment('id del producto')
                 ->references('id')->on('products')->onDelete('restrict')->onUpdate('cascade');
 
-            $table->foreignId('warehouse_id')->nullable(false)->comment('id del almacen')
+            $table->foreignId('branch_id')->nullable(false)->comment('id del almacen')
                 ->references('id')->on('almacenes')->onDelete('restrict')->onUpdate('cascade');
 
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')

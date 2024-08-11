@@ -117,22 +117,49 @@ class ProductsImplement
     }
 
     /**
-     * Crea un producto dinamicamente
+     *actualiza un producto para la producción, es decir crea la materia prima
      *
-     * @param mixed $connection
-     * @param mixed $product
-     * @param array $detalle
+     * @param Illuminate\Support\Facades\DB $connection
+     * @param integer $product_id
+     * @param array $detalles
+     * @param integer $user_id
      * 
      * @return array
      * 
      */
-    function dynamicCreateProduct($connection, $user_id, $product, $detalle = [])
+    function updateProductProduction($connection, $product_id, $detalles, $user_id)
     {
+        $product_production = [
+            "detalle" => $detalles,
+            "user_id" => $user_id
+        ];
+
+        $connection->table('products_production')->where('product_id', $product_id)->update($product_production);
+    }
+    /**
+     * Crea un producto dinamicamente
+     *
+     * @param Illuminate\Support\Facades\DB $connection
+     * @param int $user_id
+     * @param array $product
+     * @param mixed $connection
+     * @param mixed $product
+     * @param array $detalle
+     *
+     * 
+     * @return array
+     * 
+     */
+    function dynamicCreateProduct($connection, int $user_id, array $product, array $detalle = []): array
+    {
+
+        if ($product['tipo'] == 'sale' && $product['price_list_id'] == null) throw new \Exception("Los productos para la venta debe tener
+         'price_list_id' requerido", 400);
 
         $data = $this->createProduct(
             $connection,
             $product['id'],
-            $product['name'],
+            ucfirst(trim($product['name'])),
             $product['sku'],
             $product['color'],
             $product['tipo'],
@@ -143,12 +170,44 @@ class ProductsImplement
             $product['price_list_id'],
             $user_id
         );
-         
+
         if ($product['tipo'] == 'production') {
-            $this->createProductProduction($connection, $data['id'], json_encode($detalle), $user_id);
+
+            //nombre de los metodos
+            $method = $product['id'] == 0 ? 'createProductProduction' : 'updateProductProduction';
+
+            $this->$method($connection, $data['id'], json_encode($detalle), $user_id);
             $data['detalles'] = $detalle;
         }
 
         return $data;
+    }
+
+    /**
+     * Eliminar un producto
+     *
+     * @param mixed $connection
+     * @param mixed $id
+     * 
+     * @return mixed
+     * 
+     */
+    function deleteProduct($connection, $id)
+    {
+        return $connection->table('products')->where('id', $id)->delete();
+    }
+
+    function  assignProductToBranch($connection, $product_id, $branch_id, $user_id, $type_branch)
+    {
+        $table = [
+            'almacen' => 'products_branches',
+            'tienda' => 'products_stores'
+        ];
+
+        return $connection->table($table[$type_branch])->insert([
+            'product_id' => $product_id,
+            'branch_id' => $branch_id,
+            'user_id' => $user_id
+        ]);
     }
 }
