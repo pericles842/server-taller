@@ -78,4 +78,51 @@ class ProductsController extends Controller
 
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+
+    /**
+     *Crea una categoría
+     *
+     * @param Request $request
+     * 
+     * @return array
+     * 
+     */
+    public function createCategory(Request $request)
+    {
+        try {
+
+            if (!$request->header('user_id')) throw new \Exception("El encabezado 'user_id' es requerido", 400);
+            $validator = Validator::make($request->all(), [
+                'category.name' => 'required|string',
+            ]);
+
+
+            // Verificar si la validación falla
+            if ($validator->fails()) return response()->json($validator->errors(), 400);
+
+            $data = $this->productsImplement->createCategory(DB::connection(), $request->category, $request->header('user_id'));
+        } catch (\Exception $e) {
+
+            return $e;
+        }
+
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Deletes a category by its ID.
+     *
+     * @param mixed $id The ID of the category to delete
+     * @throws \Exception If an error occurs during the deletion process
+     * @return \Illuminate\Http\Response A JSON response with the deletion result
+     */
+    public function deleteCategory($id)
+    {
+        try {
+            $data = $this->productsImplement->deleteCategory(DB::connection(), $id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
 }

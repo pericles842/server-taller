@@ -14,8 +14,10 @@ class ProductsImplement
      * @return array
      * 
      */
-    function createCategory($connection, $category)
+    function createCategory($connection, $category, $user_id)
     {
+        $category['user_id'] = intval($user_id);
+        $category["name"] = ucfirst(trim($category['name']));
         if ($category['id'] == null || $category['id'] == 0) {
             $category['id'] = $connection->table('category')->insertGetId($category);
         } else {
@@ -69,9 +71,7 @@ class ProductsImplement
         $status_id,
         $category_id,
         $price_list_id,
-        $user_id,
-        $type_branch,
-        $branch_id
+        $user_id
     ) {
 
         $product = [
@@ -90,13 +90,10 @@ class ProductsImplement
 
         if ($id == null || $id == 0) {
             $product['id'] = $connection->table('products')->insertGetId($product);
-            $this->assignProductToBranch($connection, $product['id'], $branch_id, $user_id, $type_branch);
         } else {
             $connection->table('products')->where('id', $id)->update($product);
-            $this->updateProductsAssignedToBranches($connection, $product['id'], $branch_id, $user_id, $type_branch);
         }
-        $product["type_branch"] = $type_branch;
-        $product["branch_id"] = $branch_id;
+
         return  $product;
     }
 
@@ -161,8 +158,7 @@ class ProductsImplement
         if ($product['tipo'] == 'sale' && $product['price_list_id'] == null) throw new \Exception("Los productos para la venta debe tener
          'price_list_id' requerido", 400);
 
-        if ($product['tipo'] == 'production' && $product['type_branch'] == 'tienda') throw new \Exception("Los productos para la
-         producción no pueden ser asignarse a tiendas", 400);
+
 
         $data = $this->createProduct(
             $connection,
@@ -176,9 +172,7 @@ class ProductsImplement
             $product['status_id'],
             $product['category_id'],
             $product['price_list_id'],
-            $user_id,
-            $product['type_branch'],
-            $product['branch_id']
+            $user_id
         );
 
         if ($product['tipo'] == 'production') {

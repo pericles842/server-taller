@@ -41,7 +41,7 @@ class ProductosV1 extends Migration
             $table->string('name', 500)->nullable(false);
             $table->unsignedBigInteger('father_category_id')->nullable(true); // Campo opcional
             $table->foreign('father_category_id')->references('id')->on('category')
-                ->onDelete('cascade'); // Elimina en cascada al borrar el padre
+                ->onDelete('cascade')->onUpdate('cascade'); // Elimina en cascada al borrar el padre
 
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')
