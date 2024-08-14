@@ -28,6 +28,19 @@ class ProductsImplement
     }
 
     /**
+     * Obtiene todas las categorías
+     *
+     * @param Illuminate\Support\Facades\DB $connection
+     * 
+     * @return array
+     * 
+     */
+    function getCategories($connection)
+    {
+        return $connection->table('category')->get();
+    }
+
+    /**
      * elimina una categoría
      *
      * @param Illuminate\Support\Facades\DB $connection

@@ -125,4 +125,13 @@ class ProductsController extends Controller
         }
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+    public function getCategories()
+    {
+        try {
+            $data = $this->productsImplement->getCategories(DB::connection());
+        } catch (\Exception $e) {
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
 }

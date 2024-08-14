@@ -75,3 +75,4 @@ Route::post('product', [\App\Http\Controllers\ProductsController::class, 'dynami
 Route::delete('product/{id}', [\App\Http\Controllers\ProductsController::class, 'deleteProduct']);
 Route::post('category', [\App\Http\Controllers\ProductsController::class, 'createCategory']);
 Route::delete('category/{id}', [\App\Http\Controllers\ProductsController::class, 'deleteCategory']);
+Route::get('category', [\App\Http\Controllers\ProductsController::class, 'getCategories']);
