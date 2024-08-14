@@ -60,6 +60,22 @@ class Charges
             "update" => false,
             "delete" => false
         ],
+        16 => [
+            "id" => 16,
+            "label" => "Categorías",
+            "authorized" => false,
+            "create" => false,
+            "update" => false,
+            "delete" => false
+        ],
+        17 => [
+            "id" => 17,
+            "label" => "Lista de precios",
+            "authorized" => false,
+            "create" => false,
+            "update" => false,
+            "delete" => false
+        ],
         7 => [
             "id" => 7,
             "label" => "Productos",
@@ -147,7 +163,7 @@ class Charges
      * @return mixed
      * 
      */
-    function defineRole(string $name_rol, array $module_permissions,bool $json_string = true)
+    function defineRole(string $name_rol, array $module_permissions, bool $json_string = true)
     {
         $config = [];
         foreach ($this->template_charges as $key_template => $module) {
@@ -227,6 +243,14 @@ class Charges
             ],
             [
                 "id" => 5,
+                "permission_settings" => "all"
+            ],
+            [
+                "id" => 16,
+                "permission_settings" => "all"
+            ],
+            [
+                "id" => 17,
                 "permission_settings" => "all"
             ],
             [
@@ -313,6 +337,14 @@ class Charges
                 "create" => true,
                 "update" => false,
                 "delete" => false
+            ],
+            [
+                "id" => 16,
+                "permission_settings" => "all"
+            ],
+            [
+                "id" => 17,
+                "permission_settings" => "all"
             ],
             [
                 "id" => 6,
