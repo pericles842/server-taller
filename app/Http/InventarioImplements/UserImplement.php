@@ -243,7 +243,7 @@ class UserImplement
      * @return array
      * 
      */
-    public function listUsers($connection, $user)
+    public function listUsers($connection, $user_id)
     {
         $users = $connection->select("SELECT 
             user.id ,
@@ -260,8 +260,8 @@ class UserImplement
         FROM usuarios user
         INNER JOIN roles ON
              roles.id = user.rol_id
-        WHERE user.id != :user;", [
-            "user" => $user
+        WHERE user.id != :user_id;", [
+            "user_id" => $user_id
         ]);
 
         foreach ($users  as $key => $user) {
