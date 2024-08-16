@@ -37,7 +37,15 @@ class ProductsImplement
      */
     function getCategories($connection)
     {
-        return $connection->table('category')->get();
+        return $connection->select('SELECT category.id,
+                    category.name ,
+                    category.father_category_id ,
+                    C.name father_name,
+                    category.user_id,
+                    category.created_at,
+                    category.updated_at FROM `category` 
+                    LEFT JOIN category AS C ON C.father_category_id = category.id
+                    ORDER BY category.id');
     }
 
     /**
