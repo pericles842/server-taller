@@ -16,15 +16,22 @@ class ProductsImplement
      */
     function createCategory($connection, $category, $user_id)
     {
-        $category['user_id'] = intval($user_id);
-        $category["name"] = ucfirst(trim($category['name']));
-        if ($category['id'] == null || $category['id'] == 0) {
-            $category['id'] = $connection->table('category')->insertGetId($category);
+        $data = [
+            "id" => $category['id'],
+            "name" => ucfirst(trim($category['name'])),
+            "father_category_id" => $category['father_category_id'],
+            "user_id" => intval($user_id)
+        ];
+        if ($data['id'] == null || $data['id'] == 0) {
+            //setea la categoria padre en nullo si esta en 0
+            if ($data['father_category_id'] == 0) $data['father_category_id'] = null;
+
+            $data['id'] = $connection->table('category')->insertGetId($data);
         } else {
-            $connection->table('category')->where('id', $category['id'])->update($category);
+            $connection->table('category')->where('id', $data['id'])->update($data);
         }
 
-        return $category;
+        return $data;
     }
 
     /**
@@ -37,17 +44,63 @@ class ProductsImplement
      */
     function getCategories($connection)
     {
-        return $connection->select('SELECT category.id,
-                    category.name ,
-                    category.father_category_id ,
-                    C.name father_name,
-                    category.user_id,
-                    category.created_at,
-                    category.updated_at FROM `category` 
-                    LEFT JOIN category AS C ON C.father_category_id = category.id
-                    ORDER BY category.id');
+        return $connection->select("SELECT
+                    category.id,
+                    category.name,
+                    category.father_category_id,
+                    GROUP_CONCAT(C.name SEPARATOR ' -> ') AS tree_minimalist,
+                    category.user_id
+        FROM category
+        LEFT JOIN category AS C ON C.father_category_id = category.id
+        GROUP BY category.id 
+        ORDER BY category.name ASC;");
     }
 
+    /**
+     * Obtiene todas las categorías y las devuelve como un árbol jerárquico en formato JSON.
+     *
+     * @param Illuminate\Support\Facades\DB $connection Conexión a la base de datos.
+     * @return response JSON con el árbol de categorías.
+     */
+    function getTreeCategories($connection)
+    {
+        // Consulta SQL para obtener todas las categorías
+        $categories =   $connection->table('category')->get();
+
+        // Convertir el resultado en un array asociativo
+        $categories = json_decode(json_encode($categories), true);
+
+        // Construir el árbol desde el array plano
+        return  $this->buildTree($categories);
+    }
+
+    /**
+     * Construye el árbol de categorías a partir de un arreglo plano.
+     *
+     * @param array $categories Arreglo de categorías.
+     * @param int|null $fatherId ID del padre de la categoría.
+     * @return array Árbol de categorías.
+     */
+    private function buildTree(array &$categories, $fatherId = null)
+    {
+        $branch = [];
+
+        foreach ($categories as &$category) {
+            if ($category['father_category_id'] == $fatherId) {
+
+                $children = $this->buildTree($categories, $category['id']);
+                if ($children) {
+                    $category['children'] = $children;
+                } else {
+                    $category['children'] = [];
+                }
+                $category['expanded'] = true;
+                $branch[] = $category;
+            }
+        }
+
+        return $branch;
+    }
     /**
      * elimina una categoría
      *

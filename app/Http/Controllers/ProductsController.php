@@ -134,4 +134,19 @@ class ProductsController extends Controller
         }
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+    /**
+     *estructura de categorias en arbol
+     *
+     * @throws \Exception si ocurre un error al obtener las categorías
+     * @return \Illuminate\Http\Response  una respuesta con los datos de las categorías
+     */
+    public function getTreeCategories()
+    {
+        try {
+            $data = $this->productsImplement->getTreeCategories(DB::connection());
+        } catch (\Exception $e) {
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
 }

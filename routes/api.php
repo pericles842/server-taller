@@ -76,3 +76,4 @@ Route::delete('product/{id}', [\App\Http\Controllers\ProductsController::class, 
 Route::post('category', [\App\Http\Controllers\ProductsController::class, 'createCategory']);
 Route::delete('category/{id}', [\App\Http\Controllers\ProductsController::class, 'deleteCategory']);
 Route::get('category', [\App\Http\Controllers\ProductsController::class, 'getCategories']);
+Route::get('category/tree', [\App\Http\Controllers\ProductsController::class, 'getTreeCategories']);
