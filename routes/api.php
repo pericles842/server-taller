@@ -70,10 +70,14 @@ Route::post('coin/price', [\App\Http\Controllers\CoinsController::class, 'savePr
 Route::put('coin/price', [\App\Http\Controllers\CoinsController::class, 'updatePriceToACurrency']);
 Route::delete('coin/price/{id}', [\App\Http\Controllers\CoinsController::class, 'deletePriceToCurrency']);
 
-/*PRODUCTOS */
+/*PRODUCTOS, CATEGORIAS */
 Route::post('product', [\App\Http\Controllers\ProductsController::class, 'dynamicCreateProduct']);
 Route::delete('product/{id}', [\App\Http\Controllers\ProductsController::class, 'deleteProduct']);
 Route::post('category', [\App\Http\Controllers\ProductsController::class, 'createCategory']);
 Route::delete('category/{id}', [\App\Http\Controllers\ProductsController::class, 'deleteCategory']);
 Route::get('category', [\App\Http\Controllers\ProductsController::class, 'getCategories']);
 Route::get('category/tree', [\App\Http\Controllers\ProductsController::class, 'getTreeCategories']);
+
+/*LISTA DE PRECIOS */
+Route::post('price-list', [\App\Http\Controllers\PriceListController::class, 'createPriceList']);
+Route::delete('price-list/{id}', [\App\Http\Controllers\PriceListController::class, 'deletePriceList']);
