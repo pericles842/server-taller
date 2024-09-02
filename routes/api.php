@@ -81,3 +81,4 @@ Route::get('category/tree', [\App\Http\Controllers\ProductsController::class, 'g
 /*LISTA DE PRECIOS */
 Route::post('price-list', [\App\Http\Controllers\PriceListController::class, 'createPriceList']);
 Route::delete('price-list/{id}', [\App\Http\Controllers\PriceListController::class, 'deletePriceList']);
+Route::get('price-list', [\App\Http\Controllers\PriceListController::class, 'getPriceList']);

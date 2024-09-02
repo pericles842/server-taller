@@ -70,4 +70,23 @@ class PriceListController extends Controller
 
         return response($response, 200)->header('Content-Type', 'application/json');
     }
+
+    /**
+     * obtiene una lista de precios 
+     *
+     * @param Request $request
+     * 
+     * @return [type]
+     * 
+     */
+    public function getPriceList(Request $request)
+    {
+        try {
+            $response = $this->priceListImplement->getPriceList(DB::connection());
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+        return response($response, 200)->header('Content-Type', 'application/json');
+    }
 }

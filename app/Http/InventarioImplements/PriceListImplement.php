@@ -52,4 +52,19 @@ class PriceListImplement
     {
         return $connection->table('category')->where('id', $id)->delete();
     }
+
+
+    /**
+     * obtiene una lista de precios
+     *
+     * @param mixed $connection
+     * 
+     * @return array
+     * 
+     */
+    function getPriceList($connection)
+    {
+
+        return $connection->table('price_list')->get();
+    }
 }
