@@ -40,13 +40,14 @@ class PriceListController extends Controller
             $response = $this->priceListImplement->createPriceList(
                 DB::connection(),
                 $request->priceList['name'],
-                $request->header('user_id'),
                 $request->priceList['description'],
+                $request->header('user_id'),
                 $request->priceList['fecha_inicio'],
                 $request->priceList['fecha_fin'],
                 $request->priceList['id']
             );
         } catch (\Exception $e) {
+            dump($e);
             return $e;
         }
 
