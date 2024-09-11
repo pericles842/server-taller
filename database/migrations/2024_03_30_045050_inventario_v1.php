@@ -112,6 +112,7 @@ class InventarioV1 extends Migration
         Schema::create('monedas', function (Blueprint $table) {
             $table->id();
             $table->string('iso', 300)->nullable(false)->comment('Iso de la moneda');
+            $table->string('symbol', 5)->nullable(false)->comment('Simbolo de la moneda');
             $table->string('name', 500)->nullable(false)->comment('Nombre de la moneda');
             $table->boolean('default')->nullable(false)->comment('Moneda en uso');
         });

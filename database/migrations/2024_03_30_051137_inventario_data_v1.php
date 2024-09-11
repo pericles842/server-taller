@@ -20,7 +20,7 @@ class InventarioDataV1 extends Migration
         // DATA TABLA ROLES
         DB::table('roles')->insert([
             [
-                'name' => 'Super Admin',
+                'name' => 'Propietario',
                 'modules' => $charges->getChargeSuperAdmin()
             ],
             [
@@ -72,7 +72,8 @@ class InventarioDataV1 extends Migration
         DB::table('monedas')->insert(
             [
                 "iso" => "USD",
-                "name" => "DOLAR AMERICANO",
+                "symbol" => "$",
+                "name" => "DOLAR",
                 "default" => 1,
             ]
         );

@@ -76,6 +76,14 @@ class Charges
             "update" => false,
             "delete" => false
         ],
+        18 => [
+            "id" => 18,
+            "label" => "Atributos de productos",
+            "authorized" => false,
+            "create" => false,
+            "update" => false,
+            "delete" => false
+        ],
         7 => [
             "id" => 7,
             "label" => "Productos",
@@ -254,6 +262,10 @@ class Charges
                 "permission_settings" => "all"
             ],
             [
+                "id" => 18,
+                "permission_settings" => "all"
+            ],
+            [
                 "id" => 6,
                 "permission_settings" => "all"
             ],
@@ -344,6 +356,10 @@ class Charges
             ],
             [
                 "id" => 17,
+                "permission_settings" => "all"
+            ],
+            [
+                "id" => 18,
                 "permission_settings" => "all"
             ],
             [
@@ -481,7 +497,15 @@ class Charges
                 "create" => true,
                 "update" => true,
                 "delete" => false
-            ]
+            ],
+            [
+                "id" => 18,
+                "permission_settings" => "manual",
+                "authorized" => true,
+                "create" => true,
+                "update" => true,
+                "delete" => false
+            ],
         ];
 
 

@@ -51,6 +51,21 @@ class ProductosV1 extends Migration
 
         DB::statement("CALL create_timestamps('category')");
 
+        //------------------------------------------------------------------------------------
+        //*TABLA DE ATRIBUTO DE PRODUCTOS
+        //------------------------------------------------------------------------------------
+        Schema::create('product_properties', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 500)->nullable(false);
+            $table->json('properties')->nullable(false)->comment('Propiedades del producto');
+
+            $table->foreignId('status_id')->nullable(false)->comment('id del estatus')
+                ->references('id')->on('status')->onDelete('restrict')->onUpdate('cascade');
+
+            $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
+                ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
+        });
+        DB::statement("CALL create_timestamps('product_properties')");
 
         //------------------------------------------------------------------------------------
         //*TABLA DE PRODUCTOS
@@ -61,14 +76,14 @@ class ProductosV1 extends Migration
             $table->string('name', 500)->nullable(false);
             $table->integer('sku')->unique()->nullable(true);
             $table->string('color', 100)->nullable(true);
-            $table->enum('tipo', ['production', 'sale']);
+            $table->enum('product_class', ['primary_product', 'marketable_product'])->comment('venta o produccion');
+            $table->enum('type_product', ['unit_product', 'composite_product'])->comment('Unidad o compuesto');
             $table->string('reference', 300)->unique()->nullable(true);
-            $table->string('talla', 5)->nullable(true);
 
-            $table->foreignId('status_id')->nullable(false)->comment('id del usuario')
+            $table->foreignId('status_id')->nullable(false)->comment('id del estatus')
                 ->references('id')->on('status')->onDelete('restrict')->onUpdate('cascade');
 
-            $table->foreignId('category_id')->nullable(false)->comment('id del usuario')
+            $table->foreignId('category_id')->nullable(false)->comment('id de la categoría')
                 ->references('id')->on('category')->onDelete('restrict')->onUpdate('cascade');
 
             $table->foreignId('price_list_id')->nullable(true)->comment('id de la lista de precios')
@@ -106,7 +121,7 @@ class ProductosV1 extends Migration
         //*TABLA DETALLE DE PRODUCTOS EN PRODUCCIÓN
         //?PRODUCTOS PARA PRODUCIR, ES DECIR MATERIA PRIMA
         //------------------------------------------------------------------------------------
-        Schema::create('products_production', function (Blueprint $table) {
+        Schema::create('products_detail', function (Blueprint $table) {
 
             $table->foreignId('product_id')->nullable(false)->unique()->comment('id del producto')
                 ->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
@@ -115,7 +130,7 @@ class ProductosV1 extends Migration
             $table->foreignId('user_id')->nullable(false)->comment('id del usuario el cual creo el registro')
                 ->references('id')->on('usuarios')->onDelete('restrict')->onUpdate('cascade');
         });
-        DB::statement("CALL create_timestamps('products_production')");
+        DB::statement("CALL create_timestamps('products_detail')");
 
 
         //------------------------------------------------------------------------------------
@@ -165,8 +180,9 @@ class ProductosV1 extends Migration
         Schema::dropIfExists('price_list');
         Schema::dropIfExists('price_list_detail');
         Schema::dropIfExists('products');
-        Schema::dropIfExists('products_production');
+        Schema::dropIfExists('products_detail');
         Schema::dropIfExists('products_stores');
         Schema::dropIfExists('products_warehouses');
+        Schema::dropIfExists('product_properties');
     }
 }
