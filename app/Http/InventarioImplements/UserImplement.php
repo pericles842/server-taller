@@ -173,7 +173,7 @@ class UserImplement
      */
     public function getUser($connection, $username)
     {
-        $monedas = $connection->table('monedas')->select('id', 'iso', 'name')->where('default', 1)->first();
+        $monedas = $connection->table('monedas')->select('id', 'iso', 'symbol', 'name')->where('default', 1)->first();
         $user = $connection->selectOne("SELECT user.id,
                     user.fulL_name  name_user,
                     user.email,

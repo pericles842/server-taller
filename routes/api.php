@@ -71,6 +71,7 @@ Route::put('coin/price', [\App\Http\Controllers\CoinsController::class, 'updateP
 Route::delete('coin/price/{id}', [\App\Http\Controllers\CoinsController::class, 'deletePriceToCurrency']);
 
 /*PRODUCTOS, CATEGORIAS */
+Route::post('product/attributes', [\App\Http\Controllers\ProductsController::class, 'createProductsAttributes']);
 Route::post('product', [\App\Http\Controllers\ProductsController::class, 'dynamicCreateProduct']);
 Route::delete('product/{id}', [\App\Http\Controllers\ProductsController::class, 'deleteProduct']);
 Route::post('category', [\App\Http\Controllers\ProductsController::class, 'createCategory']);

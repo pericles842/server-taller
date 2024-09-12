@@ -149,4 +149,32 @@ class ProductsController extends Controller
         }
         return response($data, 200)->header('Content-Type', 'application/json');
     }
+
+
+    /**
+     *Crea y actualiza atributos de un producto
+     *
+     * @param Request $request
+     * 
+     * @return array
+     * 
+     */
+    public function createProductsAttributes(Request $request)
+    {
+         
+        try {
+            $data = $this->productsImplement->createProductsAttributes(
+                DB::connection(),
+                $request->attribute_product['id'],
+                $request->attribute_product['name'],
+                $request->attribute_product['status_id'],
+                $request->header('user_id'),
+                $request->attribute_product['attributes_products'],
+            );
+        } catch (\Exception $e) {
+             
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
 }

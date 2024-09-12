@@ -115,6 +115,48 @@ class ProductsImplement
         return $connection->table('category')->where('id', $id)->delete();
     }
 
+    function createProductsAttributes($connection, $id, $name, $status_id, $user_id, $properties_products)
+    {
+        $body = [
+            "id" => $id,
+            "name" => $name,
+            "status_id" => $status_id,
+            "user_id" => $user_id,
+            "properties" => $properties_products
+        ];
+
+        //recorremos las propiedades para agregar la key en base a el name_attributes
+        foreach ($body['properties'] as $key => $value) {
+            $body['properties'][$key]['key'] = $this->parseStringInKey($value['name_attributes']);
+        }
+
+        //guardamos un json de las propiedades para el guardado
+        $body['properties'] = json_encode($body['properties']);
+
+        if ($id == null || $id == 0) {
+            $body['id'] = $connection->table('product_properties')->insertGetId($body);
+        } else {
+            $connection->table('product_properties')->where('id', $id)->update($body);
+        }
+
+        $body['properties'] = json_decode($body['properties']);
+        //devolvemos el body
+        return $body;
+    }
+    /**
+     * Parse a string to a key, removing spaces and converting to lower case
+     *
+     * @param string $string The string to parse
+     *
+     * @return string The parsed string
+     */
+    public function parseStringInKey(string $string): string
+    {
+        $string = trim(strtolower($string));
+        $string = preg_replace('/\s+/', '_', $string);
+        return $string;
+    }
+
     /**
      * crea y  actualiza dinamicamente
      *
@@ -141,7 +183,6 @@ class ProductsImplement
         $color,
         $tipo,
         $reference,
-        $talla,
         $status_id,
         $category_id,
         $price_list_id,
@@ -154,7 +195,6 @@ class ProductsImplement
             "sku" => $sku,
             "color" => $color,
             "tipo" => $tipo,
-            "talla" => strtoupper($talla),
             "reference" => $reference,
             "status_id" => $status_id,
             "category_id" => $category_id,

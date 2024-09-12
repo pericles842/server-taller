@@ -71,6 +71,7 @@ class CoinsImplement
     monedas.id,
     monedas.name,
     monedas.iso,
+    monedas.symbol,
     monedas.default,
     CONCAT(
         '[',
@@ -81,6 +82,7 @@ class CoinsImplement
                     'id', tasas.id,
                     'father_currency', monedas.name,
                     'price', tasas.price,
+                    'price_symbol', concat(tasas.price,' ',monedas.symbol),
                     'created_at', tasas.created_at,
                     'updated_at', tasas.updated_at
                 )

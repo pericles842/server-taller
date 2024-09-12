@@ -311,7 +311,7 @@ class Charges
                 "permission_settings" => "all"
             ]
         ];
-        return $this->defineRole('Super Admin', $super_admin_config);
+        return $this->defineRole('Propietario', $super_admin_config);
     }
 
     public function getChargeAdmin()
