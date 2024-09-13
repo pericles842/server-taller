@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\InventarioImplements;
+use  App\Functions\TransformString;
 
 class ProductsImplement
 {
@@ -115,6 +116,19 @@ class ProductsImplement
         return $connection->table('category')->where('id', $id)->delete();
     }
 
+    /**
+     * Crea y actualiza un atributo de un producto
+     *
+     * @param Illuminate\Support\Facades\DB $connection
+     * @param int $id
+     * @param string $name
+     * @param int $status_id
+     * @param int $user_id
+     * @param array $properties_products 
+     *
+     * @return array
+     *
+     */
     function createProductsAttributes($connection, $id, $name, $status_id, $user_id, $properties_products)
     {
         $body = [
@@ -127,7 +141,7 @@ class ProductsImplement
 
         //recorremos las propiedades para agregar la key en base a el name_attributes
         foreach ($body['properties'] as $key => $value) {
-            $body['properties'][$key]['key'] = $this->parseStringInKey($value['name_attributes']);
+            $body['properties'][$key]['key'] = TransformString::parseStringInKey($value['name_attributes']);
         }
 
         //guardamos un json de las propiedades para el guardado
@@ -143,19 +157,25 @@ class ProductsImplement
         //devolvemos el body
         return $body;
     }
-    /**
-     * Parse a string to a key, removing spaces and converting to lower case
-     *
-     * @param string $string The string to parse
-     *
-     * @return string The parsed string
-     */
-    public function parseStringInKey(string $string): string
-    {
-        $string = trim(strtolower($string));
-        $string = preg_replace('/\s+/', '_', $string);
-        return $string;
-    }
+
+     /**
+      * Obtiene los atributos de un producto
+      *
+      * @param mixed $connection
+      * 
+      * @return array
+      * 
+      */
+     function getProductsAttributes($connection){
+
+        $properties_products = $connection->table('product_properties')->get();
+
+        foreach ($properties_products as $key => $value) {
+            $properties_products[$key]->properties = json_decode($value->properties);
+        }
+        return $properties_products;
+     }
+
 
     /**
      * crea y  actualiza dinamicamente

@@ -161,7 +161,7 @@ class ProductsController extends Controller
      */
     public function createProductsAttributes(Request $request)
     {
-         
+
         try {
             $data = $this->productsImplement->createProductsAttributes(
                 DB::connection(),
@@ -172,7 +172,26 @@ class ProductsController extends Controller
                 $request->attribute_product['attributes_products'],
             );
         } catch (\Exception $e) {
-             
+
+            return $e;
+        }
+        return response($data, 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Obtiene los atributos de los productos 
+     *
+     * @return \Illuminate\Http\Response  una respuesta con los datos de los atributos de los productos
+     */
+    public function getProductsAttributes()
+    {
+
+        try {
+            $data = $this->productsImplement->getProductsAttributes(
+                DB::connection()
+            );
+        } catch (\Exception $e) {
+
             return $e;
         }
         return response($data, 200)->header('Content-Type', 'application/json');
