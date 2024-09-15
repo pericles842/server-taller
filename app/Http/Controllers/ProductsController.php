@@ -169,7 +169,7 @@ class ProductsController extends Controller
                 $request->attribute_product['name'],
                 $request->attribute_product['status_id'],
                 $request->header('user_id'),
-                $request->attribute_product['attributes_products'],
+                $request->attribute_product['properties'],
             );
         } catch (\Exception $e) {
 

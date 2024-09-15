@@ -129,14 +129,14 @@ class ProductsImplement
      * @return array
      *
      */
-    function createProductsAttributes($connection, $id, $name, $status_id, $user_id, $properties_products)
+    function createProductsAttributes($connection, $id, $name, $status_id, $user_id, $properties)
     {
         $body = [
             "id" => $id,
             "name" => $name,
             "status_id" => $status_id,
             "user_id" => $user_id,
-            "properties" => $properties_products
+            "properties" => $properties
         ];
 
         //recorremos las propiedades para agregar la key en base a el name_attributes
