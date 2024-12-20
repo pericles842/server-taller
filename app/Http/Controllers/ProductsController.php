@@ -29,27 +29,26 @@ class ProductsController extends Controller
     {
         try {
 
-            if (!$request->header('user_id')) throw new \Exception("El encabezado 'user_id' es requerido", 400);
-            // Definir las reglas de validación
-            $validator = Validator::make($request->all(), [
-                'product.name' => 'required|string',
-                'product.id' => 'required',
-                'product.tipo' => 'required|string',
-                'product.category_id' => 'required|numeric',
-                // 'product.price_list_id' => 'required|numeric',
-                'product.status_id' => 'required|numeric'
-            ]);
+            // if (!$request->header('user_id')) throw new \Exception("El encabezado 'user_id' es requerido", 400);
+            // // Definir las reglas de validación
+            // $validator = Validator::make($request->all(), [
+            //     'product.name' => 'required|string',
+            //     'product.id' => 'required',
+            //     'product.tipo' => 'required|string',
+            //     'product.category_id' => 'required|numeric',
+            //     // 'product.price_list_id' => 'required|numeric',
+            //     'product.status_id' => 'required|numeric'
+            // ]);
 
 
-            // Verificar si la validación falla
-            if ($validator->fails()) return response()->json($validator->errors(), 400);
+            // // Verificar si la validación falla
+            // if ($validator->fails()) return response()->json($validator->errors(), 400);
 
-            $response = $this->productsImplement->dynamicCreateProduct(
-                DB::connection(),
-                $request->header('user_id'),
-                $request->product,
-                $request->product['detalles']
-            );
+             $response = $this->productsImplement->dynamicCreateProduct(
+                 DB::connection(),
+                 $request->product,
+                 $request->header('user_id')
+             );
         } catch (\Exception $e) {
 
             return $e;

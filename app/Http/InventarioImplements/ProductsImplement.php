@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\InventarioImplements;
+
 use  App\Functions\TransformString;
 
 class ProductsImplement
@@ -158,15 +159,16 @@ class ProductsImplement
         return $body;
     }
 
-     /**
-      * Obtiene los atributos de un producto
-      *
-      * @param mixed $connection
-      * 
-      * @return array
-      * 
-      */
-     function getProductsAttributes($connection){
+    /**
+     * Obtiene los atributos de un producto
+     *
+     * @param mixed $connection
+     * 
+     * @return array
+     * 
+     */
+    function getProductsAttributes($connection)
+    {
 
         $properties_products = $connection->table('product_properties')->get();
 
@@ -174,7 +176,7 @@ class ProductsImplement
             $properties_products[$key]->properties = json_decode($value->properties);
         }
         return $properties_products;
-     }
+    }
 
 
     /**
@@ -286,39 +288,42 @@ class ProductsImplement
      * @return array
      * 
      */
-    function dynamicCreateProduct($connection, int $user_id, array $product, array $detalle = []): array
+    function dynamicCreateProduct($connection, array $product, int $user_id): array
     {
 
-        if ($product['tipo'] == 'sale' && $product['price_list_id'] == null) throw new \Exception("Los productos para la venta debe tener
-         'price_list_id' requerido", 400);
+        $product['id_product']  =  $connection->table('products')->insertGetId([
+            'name' => $product['name_product'],
+            'sku' => $product['sku'],
+            'color' => $product['color'],
+            'product_class' => $product['product_class'],
+            'type_product' => $product['type_product'],
+            'reference' => $product['reference'],
+            'status_id' => 3,
+            'category_id' => $product['category_id'],
+            'price_list_id' => $product['price_list']['id'],
+            'user_id' => $user_id
+        ]);
 
+        $connection->table('products_detail')->insert([
+            'product_id' => $product['id_product'],
+            'detalle' => json_encode($product['detail_product']),
+            'user_id' => $user_id
+        ]);
 
-
-        $data = $this->createProduct(
-            $connection,
-            $product['id'],
-            ucfirst(trim($product['name'])),
-            $product['sku'],
-            $product['color'],
-            $product['tipo'],
-            $product['reference'],
-            $product['talla'],
-            $product['status_id'],
-            $product['category_id'],
-            $product['price_list_id'],
-            $user_id
-        );
-
-        if ($product['tipo'] == 'production') {
-
-            //nombre de los metodos
-            $method = $product['id'] == 0 ? 'createProductProduction' : 'updateProductProduction';
-
-            $this->$method($connection, $data['id'], json_encode($detalle), $user_id);
-            $data['detalles'] = $detalle;
-        }
-
-        return $data;
+        $price_list_detail = $product['price_list']['price_list_details'][0];
+        
+        //! SETER ARL ID DE PRECIO LISTA EN EL OBJEO PAR ALA RESPUESTA 
+        $connection->table('price_list_detail')->insert([
+            'price' =>  $price_list_detail['price'],
+            'net_price' => $price_list_detail['net_price'],
+            'discount' => $price_list_detail['discount'],
+            'iva' => $price_list_detail['iva'],
+            'active_discount' => $price_list_detail['active_discount'],
+            'product_id' =>$product['id_product'],
+            'price_list_id' => $product['price_list']['id'],
+            'user_id' => $user_id
+        ]);
+        return $product;
     }
 
     /**
